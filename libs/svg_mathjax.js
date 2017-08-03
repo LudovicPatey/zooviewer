@@ -68,15 +68,14 @@ Svg_MathJax = (function() {
                                                         var mathjaxdiv = x[1];
                                                         var justification = x[2];
                                                         var svgmath =
-                                                        mathjaxdiv.getElementsByClassName('MathJax_SVG')[0]
-                                                        .getElementsByTagName('svg')[0];
+                                                        $('.MathJax_SVG svg', mathjaxdiv).get(0);
                                                         var svgmathinfo = {
                                                         width: svgmath.viewBox.baseVal.width,
                                                         height: svgmath.viewBox.baseVal.height
                                                         };
                                                         // get graphics nodes
                                                         var gnodes =
-                                                        svgmath.getElementsByTagName('g')[0].cloneNode(true);
+                                                        $('g',svgmath).get(0).cloneNode(true);
                                                         var fontsize = svgdest.getAttribute('font-size');
                                                         var scale = options.scale*fontsize;
                                                         var x =  +svgdest.getAttribute('x');

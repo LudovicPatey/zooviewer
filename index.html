@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Zoo Viewer 0.1</title>
+        
+        
+        <!-- Graph libraries -->
+        <script src="libs/svg-pan-zoom.min.js"></script>
+        <script src="libs/viz.js"></script>
+        <script src="libs/svg_mathjax.js"></script>
+
+
+        <!-- Javascript framework -->
+        <link rel="stylesheet" type="text/css" media="screen,print" href="libs/jquery-ui-1.12.1/jquery-ui.theme.min.css" />
+        <script type="text/javascript" src="libs/jquery-3.2.1.js"></script>
+        <script type="text/javascript" src="libs/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="libs/jquery.ui-contextmenu.min.js"></script>
+        
+
+        <!-- Zoo viewer -->
+        <link rel="stylesheet" type="text/css" media="screen,print" href="styles/default.css" />
+        <script type="text/javascript" src="scripts/tools.js"></script>
+        <script type="text/javascript" src="scripts/zoo.js"></script>
+        <script type="text/javascript" src="scripts/graph.js"></script>
+        <script type="text/javascript" src="scripts/proofs.js"></script>
+        <script type="text/javascript" src="scripts/select.js"></script>
+        <script type="text/javascript" src="scripts/contextmenu.js"></script>
+        <script type="text/javascript" src="scripts/filter.js"></script>
+        
+        
+        <!-- MathJax -->
+        <script type="text/javascript" async
+            src="libs/MathJax.js?config=TeX-AMS-MML_SVG">
+            </script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                               tex2jax: {
+                                    inlineMath: [['$','$'], ['\\(','\\)']]
+                               },
+                               SVG : {
+                                    mtextFontInherit: true
+                               }
+            });
+            Zoo.init();
+
+                               
+            </script>
+    </head>
+    <body>
+        
+        <div id="size"></div>
+        <div id="panel">
+            <fieldset id="zoo">
+                <legend>Zoo</legend>
+                <div>
+                <p><select onchange="Zoo.load(this.value)">
+                    <option default="default" value="data/menagerie.json">Computability menagerie</option>
+                    <option value="data/rmzoo.json?17">Reverse mathematics</option>
+                    <option value="data/e-verse.json">Enumeration degrees</option>
+                    <option value="custom">Load a custom zoo</option>
+                </options>
+                </select></p>
+                <p><input type="file" onchange="Zoo.loadLocal(this.files)" /></p>
+                </div>
+            </fieldset>
+            
+            <fieldset id="legend">
+                <legend>Legend</legend>
+                <div>
+                    <div>
+                    <h3><label>Edges</label></h3>
+                    <p>Choose the kind of edge</p>
+                    <p id="edge_function"><select onchange="Zoo.changeEdgeKind(this.value)"></select></p>
+                    <ul>
+                        <li><input type="checkbox" checked="checked" disabled="disabled" /><div class="arrow impl">&nbsp;</div> Non-strict implication</li>
+                        <li><input type="checkbox" checked="checked" disabled="disabled" /><div class="arrow strictimpl">&nbsp;</div> Strict implication</li>
+                        <li><input type="checkbox" onclick="Graph.setOption('displayNonImplications', $(this).is(':checked'))" /><div class="arrow nonimpl">&nbsp;</div> Non-implication</li>
+                        <li><input type="checkbox" onclick="Graph.setOption('displayWeakOpenImplications', $(this).is(':checked'))" /><div class="arrow weakopen">&nbsp;</div> Weak open implication</li>
+                        <li><input type="checkbox" onclick="Graph.setOption('displayStrongOpenImplications', $(this).is(':checked'))" /><div class="arrow strongopen">&nbsp;</div> Strong open implication</li>
+                    </ul>
+                    </div>
+                    <div>
+                    <h3><label>Nodes</label></h3>
+                    <p>Choose the node coloring function</p>
+                    <p id="coloring_function"><select onchange="Zoo.changeColoring(this.value)"></select></p>
+                    <ul>
+                    </ul>
+                    </div>
+                </div>
+            </fieldset>
+            
+            <fieldset id="filter">
+                <legend>Filter</legend>
+                <div>
+                <div class="restrict_tags">
+                    <h3><label><input type="checkbox" checked="checked"> Restrict to nodes tagged by any of</label></h3>
+                    <div><p id="tags"></p>
+                        <div style="clear:both; height: 7px;">&nbsp;</div>
+                    </div>
+                </div>
+                <div class="restrict_comparable">
+                    <h3><label><input type="checkbox"> Restrict to nodes in between</label></h3>
+                    <div>
+                        <ul class="options">
+                            <li><label class="provably_comparable"><input type="checkbox" checked="checked" /> Only provably in-between</label></li>
+                            <!-- <li><label class="only_in_between"><input type="checkbox" checked="checked" /> Only nodes in-between</label></li> -->
+                        </ul>
+                        <ul class="nodes"></ul>
+                        <p style="text-align: right"><input type="button" value="In between selected nodes" onclick="Filter.addToList(this)" /></p>
+                        
+                    </div>
+                </div>
+               <!-- <div class="add_nodes disabled">
+                    <h3><label><input type="checkbox" disabled="disabled"> Add the following nodes</label></h3>
+                    <div>
+                        <p>Not implemented yet</p>
+                    </div>
+                </div>-->
+                <div class="exclude_nodes">
+                    <h3><label><input type="checkbox"> Exclude the following nodes</label></h3>
+                    <div>
+                        <ul class="nodes"></ul>
+                        <p style="text-align: right"><input type="button" value="Exclude selected nodes" onclick="Filter.addToList(this)" /></p>
+                    </div>
+                </div>
+                <p style="text-align: right"><input type="button" onclick="Filter.applyFilter()" value="Apply all the filters" /></p>
+                </div>
+            </fieldset>
+            
+            <fieldset id="contextual">
+                <legend>Contextual</legend>
+                <div>
+                    <p>Select nodes to see some context.</p>
+                </div>
+            </fieldset>
+            
+        </div>
+        
+        <svg id="defs" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="svg" xmlns:ev="http://www.w3.org/2001/xml-events" style="overflow: hidden; ">
+        <defs><pattern x="0" y="0" width="20" height="80" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <g><rect x="0" y="0" width="10" height="80"></rect></g><g><rect x="10" y="0" width="10" height="80"></rect></g></pattern></defs>
+        </svg>
+        
+        <div id="graph"></div>
+        
+        <div id="window">Hello</div>
+        
+        <div id="block">&nbsp;</div>
+        
+    </body>
+</html>

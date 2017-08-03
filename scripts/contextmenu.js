@@ -26,7 +26,8 @@ var Contextmenu = {
     
     createGlobalMenu: function() {
        return [
-         {title: "Unselect all", action: function() { Select.unselectAll(); } }
+         {title: "Unselect all", action: function() { Select.unselectAll(); } },
+        {title: "Extract the graph as an image", action: function() { Graph.downloadAsImage(); } }
                ];
     },
     

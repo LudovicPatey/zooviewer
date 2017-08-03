@@ -605,6 +605,12 @@ var Graph = {
               Proofs.showArrows(sel);
               });
         }
+    },
+    
+    downloadAsImage: function() {
+        var html = Graph.svg.get(0).outerHTML;
+        html = html.replace(/(svg-pan-zoom_viewport.*transfor)m/, "$1");
+        window.location.href = 'data:image/svg+xml;utf8,' +  unescape(html);
     }
 
     

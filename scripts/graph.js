@@ -55,13 +55,10 @@ var Graph = {
         Proofs.init();
         
         // Compute text size and generate once for all the latex node
-        var size = $('#size');
-        for(var key in this.nodes) {
-            if(this.nodes[key].size) continue;
-            size.append('<div id="size_' + Tools.escapeChars(key) + '">' + this.nodes[key].label + '</div>');
-        }
-        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-        MathJax.Hub.Queue(function() { Graph.render(); options.finished.call(this) });
+        Zoo.getNodesSize(this.nodes, function() {
+            Graph.render();
+            options.finished.call(this);
+        });
     },
     
     
@@ -71,15 +68,6 @@ var Graph = {
     },
     
     render: function() {
-        
-        // Get the size of each node
-        for(var key in this.nodes) {
-            if(this.nodes[key].size) continue;
-            var div = $('#size_' + Tools.escapeChars(key));
-            this.nodes[key].size = { width: div.width(), height: div.height() };
-            this.nodes[key].div = div;
-        }
-        $('#size').empty();
         
         // Build a raw graphviz graph
         var text = this.buildDot();
@@ -136,6 +124,7 @@ var Graph = {
                 var isComparable = true;
                 
                 // Add comparable nodes
+                
                 for(var i=0; i<filters.comparableList.length; i++) {
                     var node2 = filters.comparableList[i];
                     var isAbove = test.indexOf(this.meta.filterEdge.call(this, Zoo.nodes[key].edges[node2.key], {})) != -1;

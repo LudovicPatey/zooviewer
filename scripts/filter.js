@@ -41,6 +41,14 @@ var Filter = {
         $('input:checkbox', node).trigger('change');
         
         this.initTags();
+        
+        var urlData = Zoo.getUrlData();
+        if(urlData.filters) {
+            this.filters = urlData.filters;
+            this.filters.comparableList = Zoo.keysToNodes(this.filters.comparableList);
+            this.filters.exclusionList = Zoo.keysToNodes(this.filters.exclusionList);
+            this.dataToPanel();
+        }
     },
     
     // Init the filter panel
@@ -56,7 +64,7 @@ var Filter = {
     },
     
     // Update the panel to correspond to Filter.filters
-    dataToPanel: function() {
+    dataToPanel: function(callback) {
         var f = this.filters;
         
         var restrictToTagsNode = $('#filter .restrict_tags h3 input');
@@ -68,12 +76,12 @@ var Filter = {
         
         var restrictToComparableNode = $('#filter .restrict_comparable h3 input');
         var nodes = $('#filter .restrict_comparable .nodes');
-        $('#filter .restrict_comparable .provably_comparable input').val(f.comparableOptions.provably);
+        $('#filter .restrict_comparable .provably_comparable input').prop('checked', f.comparableOptions.provably);
         nodes.empty();
         this.addNodesToList(nodes, f.comparableList);
         restrictToComparableNode.prop('checked', f.restrictToComparable);
         restrictToComparableNode.trigger('change');
-        
+
         var excludeElementsNode = $('#filter .exclude_nodes h3 input');
         var nodes = $('#filter .exclude_nodes .nodes');
         nodes.empty();
@@ -98,10 +106,10 @@ var Filter = {
         f.comparableOptions = {};
         f.restrictToComparable =  $('#filter .restrict_comparable h3 input').is(':checked');
         f.comparableOptions.provably = $('#filter .restrict_comparable .provably_comparable input').is(':checked');
-        f.comparableOptions.inBetween = true; //$('#filter .restrict_comparable .only_in_between input').is(':checked');
+        f.comparableOptions.inBetween = true;
         $('#filter .restrict_comparable .nodes li').each(function() {
              f.comparableList.push($(this).data('node'));
-             });
+        });
         
         
         // Exclude the elements of the exclusion list
@@ -117,6 +125,13 @@ var Filter = {
     applyFilter: function() {
         Zoo.disablePanel();
         this.panelToData();
+        
+        var urlData = Zoo.getUrlData();
+        urlData.filters = $.extend({}, this.filters);
+        urlData.filters.comparableList = Zoo.nodesToKeys(urlData.filters.comparableList);
+        urlData.filters.exclusionList = Zoo.nodesToKeys(urlData.filters.exclusionList);
+        Zoo.setUrlData(urlData);
+        
         Select.unselectAll();
         Zoo.newGraph();
     },
@@ -134,11 +149,18 @@ var Filter = {
             if(content.find('[key="' + key + '"]').length) continue;
             
             // Add the element to the list
-            var li = $('<li key="' + key + '"><input type="checkbox" checked="checked" onchange="Filter.removeItem(this)" /></li>');
-            li.append($('.MathJax_SVG > *', list[i].div).clone());
+            var li = $('<li key="' + key + '" class="toAdd"><input type="checkbox" checked="checked" onchange="Filter.removeItem(this)" /></li>');
             li.data('node', list[i]);
             content.append(li);
         }
+        Zoo.getNodesSize(list, function() {
+            for(var i=0; i<list.length; i++) {
+                var key = Tools.escapeChars(list[i].key);
+                var li = content.find('[key="' + key + '"].toAdd');
+                li.append($('.MathJax_SVG > *', list[i].div).clone());
+                li.removeClass('toAdd');
+            }
+        });
 
     },
     

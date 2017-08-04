@@ -10,6 +10,11 @@ var Zoo = {
         this.initPanel();
         Filter.init();
         Contextmenu.init();
+        
+        var data = this.getUrlData();
+        if(data.zoo) {
+            $('#zoo select').val(data.zoo);
+        }
         $('#zoo select').trigger('change');
     },
     
@@ -20,6 +25,48 @@ var Zoo = {
             $(this).next().toggle('blind', {'direction': 'up'});
         });
     
+    },
+    
+    // Call Mathjax if necessary to compute the size of nodes
+    // And the div object, and then call the callback function
+    getNodesSize: function(nodes, callback) {
+        var size = $('#size');
+        var hasElements = false;
+        for(var key in nodes) {
+            if(nodes[key].size) continue;
+            hasElements = true;
+            size.append('<div id="size_' + Tools.escapeChars(key) + '">' + nodes[key].label + '</div>');
+        }
+        if(!hasElements) {
+            callback.call(this);
+            return;
+        }
+        
+        if(!this.computingSize)
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub, size.get(0)]);
+        this.computingSize = true;
+        MathJax.Hub.Queue(function() {
+            // Get the size of each node
+            for(var key in nodes) {
+                if(nodes[key].size) continue;
+                var div = $('#size_' + Tools.escapeChars(key));
+                nodes[key].size = { width: div.width(), height: div.height() };
+                nodes[key].div = div;
+                div.remove();
+            }
+            Zoo.computingSize = false;
+            callback.call(this);
+        });
+    },
+    
+    getUrlData() {
+        var url = window.location.href;
+        if(url.indexOf('#') == -1) return {};
+        return JSON.parse(url.substring(url.indexOf("#")+1));
+    },
+    
+    setUrlData(data) {
+        window.location.href = '#' + JSON.stringify(data);
     },
     
     load: function(value) {
@@ -43,6 +90,11 @@ var Zoo = {
     },
 
     loadUrl: function(zooUrl) {
+        
+        var urlData = this.getUrlData();
+        if(urlData.zoo != zooUrl) {
+            this.setUrlData({ zoo : zooUrl });
+        }
         this.disablePanel();
         $.getJSON(zooUrl, function(zoo) { Zoo.create(zoo) });
     },
@@ -139,6 +191,22 @@ var Zoo = {
        });
     },
     
+    nodesToKeys: function(nodes) {
+        var keys = [];
+        for(var i=0; i<nodes.length; i++) {
+            keys.push(nodes[i].key);
+        }
+        return keys;
+    },
+        
+    keysToNodes: function(keys) {
+        var nodes = [];
+        for(var i=0; i<keys.length; i++) {
+            nodes.push(this.nodes[keys[i]]);
+        }
+        return nodes;
+    },
+    
     createPanel: function() {
         
         this.createLegend();
@@ -151,10 +219,15 @@ var Zoo = {
     // Call it once per database
     createLegend: function() {
         
+        var urlData = this.getUrlData();
         var edgeNode  = $('#edge_function select');
         edgeNode.empty();
         for(var i=0; i<this.meta.edgeKinds.length; i++) {
             edgeNode.append('<option value="' + i + '">' + this.meta.edgeKinds[i].label + '</option>');
+        }
+        if(typeof urlData.edgeKind != 'undefined') {
+            edgeNode.val(urlData.edgeKind);
+            this.meta.selectedEdgeKind = urlData.edgeKind;
         }
         
         var coloringNode = $('#coloring_function select');
@@ -162,6 +235,10 @@ var Zoo = {
         coloringNode.empty();
         for(var i=0; i<this.meta.colorings.length-1; i++) {
             coloringNode.append('<option value="' + i + '">' + this.meta.colorings[i].label + '</option>');
+        }
+        if(typeof urlData.coloring != 'undefined') {
+            coloringNode.val(urlData.coloring);
+            this.meta.selectedColoring = urlData.coloring;
         }
         
         this.updateColoringLegend();
@@ -179,12 +256,20 @@ var Zoo = {
     
     changeEdgeKind: function(key) {
         this.meta.selectedEdgeKind = key;
+        var urlData = this.getUrlData();
+        urlData.edgeKind = key;
+        this.setUrlData(urlData);
         this.newGraph();
     },
     
     changeColoring: function(key) {
         this.meta.selectedColoring = key;
         this.updateColoringLegend();
+        if(!Select.hasSelectedNodes()) {
+            var urlData = this.getUrlData();
+            urlData.coloring = key;
+            this.setUrlData(urlData);
+        }
         Graph.setColoring(this.meta.colorings[this.meta.selectedColoring].coloring);
     },
     

@@ -60,7 +60,7 @@ var Zoo = {
     },
     
     getUrlData() {
-        var url = window.location.href;
+        var url = decodeURIComponent(window.location.href);
         if(url.indexOf('#') == -1) return {};
         return JSON.parse(url.substring(url.indexOf("#")+1));
     },

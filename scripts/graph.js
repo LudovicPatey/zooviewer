@@ -618,7 +618,7 @@ var Graph = {
         
         // Add the stripped colors coming from another SVG
         var defs = $('#defs').get(0).innerHTML;
-        //html = html.replace(/(<svg[^>]+>)/, "$1" + defs);
+        html = html.replace(/(<svg[^>]+>)/, "$1" + defs);
         
         // Remove the rezooming
         html = html.replace(/(svg-pan-zoom_viewport.*transfor)m/, "$1");

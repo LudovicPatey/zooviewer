@@ -608,8 +608,28 @@ var Graph = {
     },
     
     downloadAsImage: function() {
+        
+        // Get the SVG of the graph
         var html = Graph.svg.get(0).outerHTML;
+        
+        // Add the mathematical symbols coming from another SVG
+        var mathjaxSvg = $('#MathJax_SVG_glyphs').get(0).outerHTML;
+        html = html.replace(/(<svg[^>]+>)/, "$1" + mathjaxSvg);
+        
+        // Add the stripped colors coming from another SVG
+        var defs = $('#defs').get(0).outerHTML;
+        html = html.replace(/(<svg[^>]+>)/, "$1" + defs);
+        
+        // Remove the rezooming
         html = html.replace(/(svg-pan-zoom_viewport.*transfor)m/, "$1");
+        
+        // Remove useless namespaces
+        html = html.replace(/NS[0-9]+:/g, '');
+        
+        // Replace html entities by xml entities
+        html = html.replace(/&nbsp;/g, '&#032;');
+        
+        // Show image
         window.location.href = 'data:image/svg+xml;utf8,' +  unescape(html);
     }
 

@@ -1,5 +1,12 @@
 # Zoo viewer
 
+## Databases
+
+There are currently three databases compatible with the zoo viewer.
+* [The computability menagerie](https://www.math.wisc.edu/~jmiller/menagerie.json) maintained by Joe Miller
+* [The reverse mathematics zoo](http://ludovicpatey.com/zooviewer/data/rmzoo.json) maintained by Eric Astor
+* [The enumeration reducibility zoo](https://www.math.wisc.edu/~jmiller/e-verse.json) maintained by Joe Miller and Maryia Soskova
+
 ## Database format
 
 The whole database is in JSON. 
@@ -9,8 +16,8 @@ The whole database is in JSON.
 The root JSON contains a pair
 
     {
-	    "nodes" : { "key1" : node1, "key2" : node2, ... },
-	    "meta" : { ... }
+	"nodes" : { "key1" : node1, "key2" : node2, ... },
+	"meta" : { ... }
     }
 
 The *nodes* key contains a *dictionary* of nodes, that is, a map of keys to nodes, which defines the graph model.
@@ -21,9 +28,9 @@ The *meta* key specifies meta information, such as the coloring functions of the
 A node is a vertex in the graph. It is a pet in the zoo. It has the following shape:
 
 	{
-	    "uid" : unique id,
-		"label" : string,
-		"definition" : longer string (with possible TeX),
+		"uid" : unique id,
+	    	"label" : string,
+	    	"definition" : longer string (with possible TeX),
 		"edges": {
 			"key1" : Edge
 			"key2" : Edge
@@ -66,8 +73,8 @@ The *meta* key in the root contains meta information, such as the coloring funct
 
 	 {
 		"edgeKinds" : [ ... ],
-	    "colorings" : [ ... ],
-	    "graphviz" = {
+		"colorings" : [ ... ],
+		"graphviz" = {
 	        "rankdir" = "TB" // optional. TB, BT, LR, RL
 	    }
 	 }
@@ -79,13 +86,13 @@ The *graphviz* key contains a dictionary of options for graphviz, the rendering 
 ### Coloring
 
 	{
-	  "label" : "Name of the coloring",
-	  "colors" : [
-	     { "color" : "lightblue", "label" : "Explanation 1" },
-	     { "color" : "lightgreen", "label" : "Explanation 2" },
-	     ...
-	  ],
-	  "coloring" : "..."
+		"label" : "Name of the coloring",
+		"colors" : [
+			{ "color" : "lightblue", "label" : "Explanation 1" },
+			{ "color" : "lightgreen", "label" : "Explanation 2" },
+			...
+		],
+		"coloring" : "..."
 	}
 
 The *label* is the name of the coloring, to be displayed as a list, so that the user can choose which coloring to use.
@@ -102,7 +109,7 @@ A same set of nodes might be related to each other by various kind of relations.
 
 	{
 		"label" : "Name of the edge kind",
-	    "functionBody" : "if(!edge.properties.implication || edge.properties.implication.value == null) return 2; return edge.properties.implication.value ? 1 : 0;"
+		"functionBody" : "if(!edge.properties.implication || edge.properties.implication.value == null) return 2; return edge.properties.implication.value ? 1 : 0;"
 	         }
 
 The *label* should be a short string which will be displayed in a list, so that the user can choose which edge kind to use.
@@ -112,3 +119,10 @@ The *functionBody* key contains the body of a javascript function, with *node* a
 	"if(!edge.properties.implication.value == null) return 2; return edge.properties.implication.value ? 1 : 0;"
 
 Here, we suppose that the edges have an *implication* property, specifying whether the source implies the destination, and equal to null if it is unknown.
+
+## Credit
+
+This visualizer has many inspirations.
+The whole story started with the computability diagram of Bjørn Kjos-Hanssen available [here](http://www.math.wisc.edu/~jmiller/Menagerie/bn1g.pdf). Joe Miller developped a command line tool for managing a subset of the computability diagram, and extracting the open questions, among others. The [computability menagerie](http://menagerie.math.wisc.edu/) was born. Mushfeq Khan created a web interactive visualizer of the computability menagerie. Damir Dzhafarov modified the command line tool of the computability menagerie to create a [reverse mathematics zoo](http://rmzoo.math.uconn.edu). This [tool](http://rmzoo.math.uconn.edu) was largely rewritten and improved by Eric Astor. Last, facing the need of a new scalable and generalized visualiser, Joe Miller and Ludovic Patey designed a new interactive interface.
+
+Many people have helped with the various zoos, by commenting on the code, contributing facts, suggesting new features, or just expressing their interest. Thanks in particular to David Belanger, Peter Cholak, Stephen Flood, Denis Hirschfeldt, Steffen Lempp, Antonio Montalbán, Carl Mummert, Sam Sanders, Mariya Soskova and Ted Slaman.

@@ -16,8 +16,8 @@ The whole database is in JSON.
 The root JSON contains a pair
 
     {
-	"nodes" : { "key1" : node1, "key2" : node2, ... },
-	"meta" : { ... }
+		"nodes" : { "key1" : node1, "key2" : node2, ... },
+		"meta" : { ... }
     }
 
 The *nodes* key contains a *dictionary* of nodes, that is, a map of keys to nodes, which defines the graph model.
@@ -75,8 +75,8 @@ The *meta* key in the root contains meta information, such as the coloring funct
 		"edgeKinds" : [ ... ],
 		"colorings" : [ ... ],
 		"graphviz" = {
-	        "rankdir" = "TB" // optional. TB, BT, LR, RL
-	    }
+	        	"rankdir" = "TB" // optional. TB, BT, LR, RL
+		}
 	 }
 
 The *edgeKinds* and *coloring* keys contain respectively a list of edge kinds, and of colorings (described below).
@@ -110,13 +110,14 @@ A same set of nodes might be related to each other by various kind of relations.
 	{
 		"label" : "Name of the edge kind",
 		"functionBody" : "if(!edge.properties.implication || edge.properties.implication.value == null) return 2; return edge.properties.implication.value ? 1 : 0;"
-	         }
+	}
 
 The *label* should be a short string which will be displayed in a list, so that the user can choose which edge kind to use.
 
 The *functionBody* key contains the body of a javascript function, with *node* as a free variable. It is supposed to return 0, 1 or 2, depending on whether there is provably no arrow (return 0), there is provably an arrow (return 1), or it is currently an open question (return 2). For example, it could be
 
-	"if(!edge.properties.implication.value == null) return 2; return edge.properties.implication.value ? 1 : 0;"
+	"if(!edge.properties.implication.value == null) return 2; 
+	return edge.properties.implication.value ? 1 : 0;"
 
 Here, we suppose that the edges have an *implication* property, specifying whether the source implies the destination, and equal to null if it is unknown.
 

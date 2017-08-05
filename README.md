@@ -60,17 +60,52 @@ The *edges* key contains a dictionary of edges, whose keys are the node keys of 
 
 The *properties* key contains a dictionary of properties (to be defined later), which are zoo-specific. For example, in a human zoo, the properties might be the age, or the profession.
 
-The *tags* key contains a list of tags. A tag is nothing but a string used to classify nodes. The user will have the possibility to restrict the vertices to some tags. 
+The *tags* key contains a list of tags. A tag is nothing but a string used to classify nodes. The user will have the possibility to restrict the vertices to some tags. There is a distinguished tag called *default*. Any node tagged *default* will be displayed by default when loading the zoo.
 
 > **Note:** The main difference between a tag and a property, is that a tag is supposed to be an arbitrary human classification, while a property has to be justified by a proof.
 
 ### Edge
 
-TODO
+An edge is an information related to an ordered pair (source node, destination node). It is of the form
+
+	{
+		"srcKey" : key of source node,
+		"dstKey" : key of destination node,
+		"properties" : {
+			"property1" : Property
+			...
+		}
+	}
+
+Every pair of nodes has an edge, even the pairs whose source equals the destination, and representing a loop edge. Whether there will actually be an arrow or not depends on the edge kind functions (defined below) which will take a decision based on the *properties* key.
+
+*srcKey* is the key of the source node, while *dstKey* is the key of the destination node. The *properties* key contains a dictionnary of zoo-specific properties, based on which the viewer will show an arrow or not. See below for the definition of a property.
 
 ### Property
 
-TODO
+A property represents a fact (about a node, or an edge), which has to be justified by a proof, or a reference to a proof.
+It is of the form
+
+
+	{
+		"uid" : unique id,
+		"value" : anything (null if open),
+		"description" : string describing the meaning of the value (with possible TeX),
+		"justification" : {
+			"weight" : the weight
+			"direct": string with a direct justification (with possible TeX),
+			"composite" : array of property uids for a composite justification
+		}
+	}
+	
+The *uid* is a unique numerical identifier.  It is used for the composite justifications, which refer to other properties.
+
+The *value* key contains the value of the property, or null if it is not known. 
+
+The *description* key contains a string describing the meaning of the value (and not the meaning of the property). For example, in a human zoo, if a human node has a property "age" equal to 5, the description could be "The age of this person is 5". The description may contain TeX.
+
+The *justification* contains the information justifying the fact that this property has this particular value. There are two kind of justifications: the direct ones, and the composite ones. A direct justification is specified by the key *direct* which will contain a text justifying the value of the property. An obvious direct justification is specified by an empty string. A composite justification will contain an array of uids of other properties, which altogether are sufficient to justify the value of the current property. A typical composite justification is the justification of an arrow obtained by transitivity of two other arrows. Either *direct*, or *composite* must be equal to null. Moreover, *weight* equals 1 if and only if the justification is direct.
+
 
 
 ### Meta

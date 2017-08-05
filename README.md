@@ -7,6 +7,12 @@ There are currently three databases compatible with the zoo viewer.
 * [The reverse mathematics zoo](http://ludovicpatey.com/zooviewer/data/rmzoo.json) maintained by Eric Astor
 * [The enumeration reducibility zoo](https://www.math.wisc.edu/~jmiller/e-verse.json) maintained by Joe Miller and Mariya Soskova
 
+## Screenshot
+
+You can have a preview of the interface with the enumeration reducibility zoo.
+
+![Enumeration reducibility zoo](https://github.com/LudovicPatey/zooviewer/raw/master/imgs/screenshot.png)
+
 ## Database format
 
 The whole database is in JSON. 

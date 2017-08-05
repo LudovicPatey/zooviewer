@@ -9,7 +9,7 @@ There are currently three databases compatible with the zoo viewer.
 
 ## Screenshot
 
-You can have a preview of the interface with the enumeration reducibility zoo.
+Here is a preview of the interface with the enumeration reducibility zoo.
 
 ![Enumeration reducibility zoo](https://github.com/LudovicPatey/zooviewer/raw/master/imgs/screenshot.png)
 
@@ -19,7 +19,7 @@ The whole database is in JSON.
 
 ### Zoo
 
-The root JSON contains a pair
+The root of the JSON object consists of two keys:
 
     {
 		"nodes" : { "key1" : node1, "key2" : node2, ... },
@@ -127,7 +127,7 @@ The *functionBody* key contains the body of a javascript function, with *node* a
 
 Here, we suppose that the edges have an *implication* property, specifying whether the source implies the destination, and equal to null if it is unknown.
 
-## Credit
+## Credits
 
 This visualizer has many inspirations.
 The whole story started with the computability diagram of Bjørn Kjos-Hanssen available [here](http://www.math.wisc.edu/~jmiller/Menagerie/bn1g.pdf). Joe Miller developped a command line tool for managing a subset of the computability diagram, and extracting the open questions, among others. The [computability menagerie](http://menagerie.math.wisc.edu/) was born. Mushfeq Khan created a web interactive visualizer of the computability menagerie. Damir Dzhafarov modified the command line tool of the computability menagerie to create a [reverse mathematics zoo](http://rmzoo.math.uconn.edu). This [tool](http://rmzoo.math.uconn.edu) was largely rewritten and improved by Eric Astor. Last, facing the need of a new scalable and generalized visualiser, Joe Miller and Ludovic Patey designed a new interactive interface.

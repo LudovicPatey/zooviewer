@@ -109,7 +109,7 @@ A same set of nodes might be related to each other by various kind of relations.
 
 	{
 		"label" : "Name of the edge kind",
-		"functionBody" : "if(!edge.properties.implication || edge.properties.implication.value == null) return 2; return edge.properties.implication.value ? 1 : 0;"
+		"functionBody" : "..."
 	}
 
 The *label* should be a short string which will be displayed in a list, so that the user can choose which edge kind to use.

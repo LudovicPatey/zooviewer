@@ -1,5 +1,7 @@
 # Zoo viewer
 
+Zoo viewer is an interactive web-based visualizer of zoos (partially ordered sets).
+
 ## Databases
 
 There are currently three databases compatible with the zoo viewer.

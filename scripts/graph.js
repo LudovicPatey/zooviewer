@@ -221,15 +221,21 @@ var Graph = {
         
         // Add implications
         var impls = this.strongImplications;
+        var strong = [];
         for(var i=0; i<impls.length; i++) {
             var from = impls[i].from;
             var to = impls[i].to;
+            var strict = this.nonImplications[to] && this.nonImplications[to][from];
+            
+            if(strict) {
+                strong.push({from : from, to : to });
+            }
+            
             
             // Display a black arrow if the implication is strict
             // And a gray one otherwise
-            var strict = this.nonImplications[to] && this.nonImplications[to][from]
-                 ? ' [color = "black"]' : ' [color = "grey"]';
-            text += ' "' + impls[i].from + '" -> "' + impls[i].to + '" ' + strict + '\n';
+            var color = strict ? ' [color = "black"]' : ' [color = "grey"]';
+            text += ' "' + impls[i].from + '" -> "' + impls[i].to + '" ' + color + '\n';
         }
         
         // Add equivalences
@@ -250,7 +256,16 @@ var Graph = {
                 // Display only the non-obvious non-implications
                 // Basically, if A -> B and B does not imply A,
                 // this is already reflected by a black arrow instead of a gray one
-                if(this.implications[to] && this.implications[to][from]) continue;
+                var display = true;
+                for(var j = 0; j<strong.length; j++) {
+                    var s = strong[j];
+                    if(this.implications[to] && this.implications[to][s.from] && this.implications[s.to] && this.implications[s.to][from]) {
+                        display = false;
+                        break;
+                    }
+                }
+                //if(this.implications[to] && this.implications[to][from]) continue;
+                if(!display) continue
                 text += ' "' + from + '" -> "' + to + '" [color = "#ff0000", constraint = false]\n';
             }
         }

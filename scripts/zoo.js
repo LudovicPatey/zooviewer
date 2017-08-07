@@ -3,7 +3,7 @@ var Zoo = {
 
     nodes: null, // The total list of all nodes
     meta: null, // The database-specific functions
-    tags: null, // The list of all tags
+    //tags: null, // The list of all tags
 
     // Initialize the zoo once for all
     init: function() {
@@ -105,12 +105,12 @@ var Zoo = {
         this.nodes = zoo.nodes;
 
         // Extracts tags out of nodes
-        this.tags = {};
-        for(var key in zoo.nodes) {
-            for(var i=0; i<zoo.nodes[key].tags.length; i++) {
-                this.tags[zoo.nodes[key].tags[i]] = true;
-            }
-        }
+        //this.tags = {};
+        //for(var key in zoo.nodes) {
+        //    for(var i=0; i<zoo.nodes[key].tags.length; i++) {
+        //        this.tags[zoo.nodes[key].tags[i]] = true;
+        //    }
+        //}
 
         // Transform meta into functions
         this.initMeta(zoo.meta);
@@ -151,6 +151,15 @@ var Zoo = {
         }
         for(var i=0; i<meta.edgeKinds.length; i++) {
             meta.edgeKinds[i].func = new Function('edge', 'context', meta.edgeKinds[i].functionBody);
+        }
+        
+        if(!meta.tags) {
+            meta.tags = [{ key : "default", label: "Default", "default": true}];
+        }
+        meta.defaultTag = 0;
+        for(var i=0; i<meta.tags.length; i++) {
+            if(!meta.tags[i].functionBody) continue;
+            meta.tags[i].tag = new Function('node', meta.tags[i].functionBody);
         }
         
         

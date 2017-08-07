@@ -107,7 +107,12 @@ var Graph = {
             if(filters.restrictToTags) {
                 var hasTag = false;
                 for(var i=0; i<filters.tags.length; i++) {
-                    if(node.tags.indexOf(filters.tags[i]) != -1) {
+                    var tag = Zoo.meta.tags[filters.tags[i]];
+                    if(tag.tag && tag.tag.call(this, node)) {
+                        hasTag = true;
+                        break;
+                    }
+                    else if(node.tags.indexOf(tag.key) != -1) {
                         hasTag = true;
                         break;
                     }

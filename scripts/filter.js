@@ -22,9 +22,16 @@ var Filter = {
     
     initDatabase: function() {
         
+        var tags = [];
+        for(var i=0; i<Zoo.meta.tags.length; i++) {
+            if(Zoo.meta.tags[i]["default"]) {
+                tags.push(i);
+            }
+        }
+        
         this.filters = {
             restrictToTags: true,
-            tags: ['default'],
+            tags: tags,
             comparableOptions: {
                 provably: false,
                 inBetween: true
@@ -56,10 +63,12 @@ var Filter = {
     initTags: function() {
         var tagNode = $('#tags');
         tagNode.empty();
-        for(var tag in Zoo.tags) {
-            var checked = this.filters.tags.indexOf(tag) != -1 ? 'checked="checked"' : '';
-            tagNode.append('<label name="' + tag + '"><input type="checkbox" ' + checked + ' /> ' + tag + '</label>');
+        for(var i=0; i<Zoo.meta.tags.length; i++) {
+            var tag = Zoo.meta.tags[i];
+            var checked = this.filters.tags.indexOf(i) != -1 ? 'checked="checked"' : '';
+            tagNode.append('<label name="' + i + '"><input type="checkbox" ' + checked + ' /> ' + tag.label + '</label>');
         }
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, tagNode.get(0)]);
 
     },
     

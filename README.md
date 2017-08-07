@@ -1,5 +1,7 @@
 # Zoo viewer
 
+Zoo viewer is an interactive web-based visualizer of zoos (partially ordered sets).
+
 ## Databases
 
 There are currently three databases compatible with the zoo viewer.
@@ -9,7 +11,7 @@ There are currently three databases compatible with the zoo viewer.
 
 ## Screenshot
 
-You can have a preview of the interface with the enumeration reducibility zoo.
+Here is a preview of the interface with the enumeration reducibility zoo.
 
 ![Enumeration reducibility zoo](https://github.com/LudovicPatey/zooviewer/raw/master/imgs/screenshot.png)
 
@@ -19,7 +21,7 @@ The whole database is in JSON.
 
 ### Zoo
 
-The root JSON contains a pair
+The root of the JSON object consists of two keys:
 
     {
 		"nodes" : { "key1" : node1, "key2" : node2, ... },
@@ -60,17 +62,52 @@ The *edges* key contains a dictionary of edges, whose keys are the node keys of 
 
 The *properties* key contains a dictionary of properties (to be defined later), which are zoo-specific. For example, in a human zoo, the properties might be the age, or the profession.
 
-The *tags* key contains a list of tags. A tag is nothing but a string used to classify nodes. The user will have the possibility to restrict the vertices to some tags. 
+The *tags* key contains a list of tags. A tag is nothing but a string used to classify nodes. The user will have the possibility to restrict the vertices to some tags. There is a distinguished tag called *default*. Any node tagged *default* will be displayed by default when loading the zoo.
 
 > **Note:** The main difference between a tag and a property, is that a tag is supposed to be an arbitrary human classification, while a property has to be justified by a proof.
 
 ### Edge
 
-TODO
+An edge is an information related to an ordered pair (source node, destination node). It is of the form
+
+	{
+		"srcKey" : key of source node,
+		"dstKey" : key of destination node,
+		"properties" : {
+			"property1" : Property
+			...
+		}
+	}
+
+Every pair of nodes has an edge, even the pairs whose source equals the destination, and representing a loop edge. Whether there will actually be an arrow or not depends on the edge kind functions (defined below) which will take a decision based on the *properties* key.
+
+*srcKey* is the key of the source node, while *dstKey* is the key of the destination node. The *properties* key contains a dictionnary of zoo-specific properties, based on which the viewer will show an arrow or not. See below for the definition of a property.
 
 ### Property
 
-TODO
+A property represents a fact (about a node, or an edge), which has to be justified by a proof, or a reference to a proof.
+It is of the form
+
+
+	{
+		"uid" : unique id,
+		"value" : anything (null if open),
+		"description" : string describing the meaning of the value (with possible TeX),
+		"justification" : {
+			"weight" : the weight
+			"direct": string with a direct justification (with possible TeX),
+			"composite" : array of property uids for a composite justification
+		}
+	}
+	
+The *uid* is a unique numerical identifier.  It is used for the composite justifications, which refer to other properties.
+
+The *value* key contains the value of the property, or null if it is not known. 
+
+The *description* key contains a string describing the meaning of the value (and not the meaning of the property). For example, in a human zoo, if a human node has a property "age" equal to 5, the description could be "The age of this person is 5". The description may contain TeX.
+
+The *justification* contains the information justifying the fact that this property has this particular value. There are two kind of justifications: the direct ones, and the composite ones. A direct justification is specified by the key *direct* which will contain a text justifying the value of the property. An obvious direct justification is specified by an empty string. A composite justification will contain an array of uids of other properties, which altogether are sufficient to justify the value of the current property. A typical composite justification is the justification of an arrow obtained by transitivity of two other arrows. Either *direct*, or *composite* must be equal to null. Moreover, *weight* equals 1 if and only if the justification is direct.
+
 
 
 ### Meta
@@ -127,7 +164,7 @@ The *functionBody* key contains the body of a javascript function, with *node* a
 
 Here, we suppose that the edges have an *implication* property, specifying whether the source implies the destination, and equal to null if it is unknown.
 
-## Credit
+## Credits
 
 This visualizer has many inspirations.
 The whole story started with the computability diagram of Bjørn Kjos-Hanssen available [here](http://www.math.wisc.edu/~jmiller/Menagerie/bn1g.pdf). Joe Miller developped a command line tool for managing a subset of the computability diagram, and extracting the open questions, among others. The [computability menagerie](http://menagerie.math.wisc.edu/) was born. Mushfeq Khan created a web interactive visualizer of the computability menagerie. Damir Dzhafarov modified the command line tool of the computability menagerie to create a [reverse mathematics zoo](http://rmzoo.math.uconn.edu). This [tool](http://rmzoo.math.uconn.edu) was largely rewritten and improved by Eric Astor. Last, facing the need of a new scalable and generalized visualiser, Joe Miller and Ludovic Patey designed a new interactive interface.

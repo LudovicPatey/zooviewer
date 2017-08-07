@@ -2,6 +2,13 @@
 
 Zoo viewer is an interactive web-based visualizer of zoos (partially ordered sets).
 
+## Installation
+
+The front-end is purely client-side, which means that it is ready to use by accessing the files on a web browser.
+In order to add a database, simply edit the *index.html* file to add a the following line in the zoo list:
+
+	<option value="http://url-of-the-database.json">Name of the zoo</option>
+
 ## Databases
 
 There are currently three databases compatible with the zoo viewer.
@@ -62,7 +69,7 @@ The *edges* key contains a dictionary of edges, whose keys are the node keys of 
 
 The *properties* key contains a dictionary of properties (to be defined later), which are zoo-specific. For example, in a human zoo, the properties might be the age, or the profession.
 
-The *tags* key contains a list of tags. A tag is nothing but a string used to classify nodes. The user will have the possibility to restrict the vertices to some tags. There is a distinguished tag called *default*. Any node tagged *default* will be displayed by default when loading the zoo.
+The *tags* key contains a list of tag keys. See the tags section to settle the possible tags. A tag is a way to classify nodes. The user will have the possibility to restrict the vertices to some tags.
 
 > **Note:** The main difference between a tag and a property, is that a tag is supposed to be an arbitrary human classification, while a property has to be justified by a proof.
 
@@ -115,6 +122,7 @@ The *justification* contains the information justifying the fact that this prope
 The *meta* key in the root contains meta information, such as the coloring functions of the nodes, or the edge kinds... It is of the form
 
 	 {
+	 	"tags" : [ ... ],
 		"edgeKinds" : [ ... ],
 		"colorings" : [ ... ],
 		"graphviz" = {
@@ -122,9 +130,26 @@ The *meta* key in the root contains meta information, such as the coloring funct
 		}
 	 }
 
-The *edgeKinds* and *coloring* keys contain respectively a list of edge kinds, and of colorings (described below).
+The *tags*, *edgeKinds* and *coloring* keys contain respectively a list of tags, edge kinds, and of colorings (described below).
 
 The *graphviz* key contains a dictionary of options for graphviz, the rendering engine. The only option supported yet is *rankdir*, which specifies the orientation of the graph (TB for Top-Bottom, BT for Bottom-Top, LR for Left-Right and RL for... guess what).
+
+### Tag
+
+A tag represents a cluster of nodes. There are two kinds of tags: the static ones and the dynamical ones. The static ones are specified by a key. Any node having the tag key among its tags list will be tagged by it. A dynamical tag is specified by a filtering function. In general, a tag is of the form
+
+	{
+		"label" : "A string with possible Tex",
+		"key" : "my key", // optional
+		"functionBody" : "...", // optional
+		"default" : true // optional
+	}
+	
+The *label* key is the label of the tag to be displayed in the filter panel. It may contain TeX.
+
+The *key* label is optional, and contains a short string in the case of a static tag. For a dynamical tag, the *functionBody* key must be specified, and must contain the body of a javascript function, with *node* as a free variable, and returning a boolean specifying whether the node should receive the tag or not.
+
+The *default* key contains a boolean specifying whether or not the tag should be checked by default in the panel. In other words, it says whether the nodes tagged by this tag should be displayed by default or not.
 
 ### Coloring
 
@@ -163,6 +188,8 @@ The *functionBody* key contains the body of a javascript function, with *node* a
 	return edge.properties.implication.value ? 1 : 0;"
 
 Here, we suppose that the edges have an *implication* property, specifying whether the source implies the destination, and equal to null if it is unknown.
+
+> **Important:** An edge kind should be a transitive relation. In other words, the transitive closure of the arrows should be precomputed by the JSON file.
 
 ## Credits
 

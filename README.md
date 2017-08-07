@@ -11,7 +11,7 @@ In order to add a database, simply edit the *index.html* file to add a the follo
 
 ## Databases
 
-There are currently three databases compatible with the zoo viewer.
+There are currently four databases compatible with the zoo viewer.
 * [The computability menagerie](https://www.math.wisc.edu/~jmiller/menagerie.json) maintained by Joe Miller
 * [The reverse mathematics zoo](http://ludovicpatey.com/zooviewer/data/rmzoo.json) maintained by Eric Astor
 * [The enumeration reducibility zoo](https://www.math.wisc.edu/~jmiller/e-verse.json) maintained by Joe Miller and Mariya Soskova

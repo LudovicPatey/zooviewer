@@ -35,7 +35,7 @@ var Zoo = {
         for(var key in nodes) {
             if(nodes[key].size) continue;
             hasElements = true;
-            size.append('<div id="size_' + Tools.escapeChars(key) + '">' + nodes[key].label + '</div>');
+            size.append('<div id="size_' + Tools.escapeChars(key) + '">' + nodes[key].texLabel + '</div>');
         }
         if(!hasElements) {
             callback.call(this);
@@ -104,14 +104,6 @@ var Zoo = {
 
         this.nodes = zoo.nodes;
 
-        // Extracts tags out of nodes
-        //this.tags = {};
-        //for(var key in zoo.nodes) {
-        //    for(var i=0; i<zoo.nodes[key].tags.length; i++) {
-        //        this.tags[zoo.nodes[key].tags[i]] = true;
-        //    }
-        //}
-
         // Transform meta into functions
         this.initMeta(zoo.meta);
 
@@ -119,7 +111,7 @@ var Zoo = {
         for(var src in zoo.nodes) {
             var node = zoo.nodes[src];
             node.key = src;
-            node.label = Tools.toTex(node.label);
+            node.texLabel = Tools.toTex(node.label);
             for(var dest in node.edges) {
                 node.edges[dest].src = node;
                 node.edges[dest].dest = zoo.nodes[dest];

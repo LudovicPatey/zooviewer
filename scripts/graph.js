@@ -70,7 +70,13 @@ var Graph = {
     render: function() {
         
         // Build a raw graphviz graph
-        var text = this.buildDot();
+        var text = Export.toDot({
+             displayNonImplications : Graph.options.displayNonImplications,
+             displayWeakOpenImplications : Graph.options.displayWeakOpenImplications,
+             displayStrongOpenImplications : Graph.options.displayStrongOpenImplications,
+             fixNodeSize: true,
+             useLabels : false
+        });
         var container = $('#graph');
         container.html(Viz(text));
         
@@ -204,99 +210,7 @@ var Graph = {
         this.nonImplications = nonImpls;
     },
     
-    // Build a big string in DOT format
-    buildDot: function(relations){
-        
-        var text = "digraph G { graph ";
-        text += "[rankdir = " + this.meta.graphviz.rankdir + "\n ranksep = 0.5 ]\n";
-        text += "node [shape=ellipse,fillcolor=yellow,style=filled,color=white];\n";
-
-        // Add nodes
-        for(var key in this.nodes) {
-            var size = this.nodes[key].size;
-            var dim = 'width=' + ((size.width+10)/70) + ', height=' + ((size.height+10)/70);
-            text += ' "' + key + '" [fixedsize=shape, ' + dim + '] \n';
-        }
-        
-        
-        // Add implications
-        var impls = this.strongImplications;
-        var strong = [];
-        for(var i=0; i<impls.length; i++) {
-            var from = impls[i].from;
-            var to = impls[i].to;
-            var strict = this.nonImplications[to] && this.nonImplications[to][from];
-            
-            if(strict) {
-                strong.push({from : from, to : to });
-            }
-            
-            
-            // Display a black arrow if the implication is strict
-            // And a gray one otherwise
-            var color = strict ? ' [color = "black"]' : ' [color = "grey"]';
-            text += ' "' + impls[i].from + '" -> "' + impls[i].to + '" ' + color + '\n';
-        }
-        
-        // Add equivalences
-        var can = this.canonical;
-        for(var id in can) {
-            if(can[id] != id) {
-                text += ' "' + can[id] + '" -> "' + id + '" [dir = both]\n';
-            }
-        }
-        
-        // Add non-implications
-        if(this.options.displayNonImplications) {
-            var nonImpls = this.strongNonImplications;
-            for(var i=0; i<nonImpls.length; i++) {
-                var from = nonImpls[i].from;
-                var to = nonImpls[i].to;
-                
-                // Display only the non-obvious non-implications
-                // Basically, if A -> B and B does not imply A,
-                // this is already reflected by a black arrow instead of a gray one
-                var display = true;
-                for(var j = 0; j<strong.length; j++) {
-                    var s = strong[j];
-                    if(this.implications[to] && this.implications[to][s.from] && this.implications[s.to] && this.implications[s.to][from]) {
-                        display = false;
-                        break;
-                    }
-                }
-                //if(this.implications[to] && this.implications[to][from]) continue;
-                if(!display) continue
-                text += ' "' + from + '" -> "' + to + '" [color = "#ff0000", constraint = false]\n';
-            }
-        }
-        
-        // Add weak open implications
-        if(this.options.displayWeakOpenImplications) {
-            var open = this.weakOpenImplications;
-            for(var i=0; i<open.length; i++) {
-                var from = open[i].from;
-                var to = open[i].to;
-                text += ' "' + from + '" -> "' + to + '" [color = "#008000", style = "dashed", constraint = false]\n';
-            }
-        }
-        
-        // Add strong open implications
-        if(this.options.displayStrongOpenImplications) {
-            var open = this.strongOpenImplications;
-            for(var i=0; i<open.length; i++) {
-                var from = open[i].from;
-                var to = open[i].to;
-                text += ' "' + from + '" -> "' + to + '" [color = "#ffa500", style = "dashed", constraint = false]\n';
-            }
-        }
-        
-        
-        text += "}\n";
-        
-        return text;
-    },
-        
-        // Compute the maximal non-implications
+    // Compute the maximal non-implications
     computeStrongNonImplications: function() {
 
         var nonImpls = this.nonImplications;
@@ -557,12 +471,12 @@ var Graph = {
     processNodeLabels: function() {
         $('.node', this.svg).each(function(){
                                   
-        var node = $(this).data('data');
+            var node = $(this).data('data');
 
 
-        // Graphviz used ids as labels
-        // Replace id with the Latex label
-        $('text', this).html(node.label);
+            // Graphviz used ids as labels
+            // Replace id with the Latex label
+            $('text', this).html(node.texLabel);
 
 
         });
@@ -614,32 +528,6 @@ var Graph = {
               Proofs.showArrows(sel);
               });
         }
-    },
-    
-    downloadAsImage: function() {
-        
-        // Get the SVG of the graph
-        var html = Graph.svg.get(0).outerHTML;
-        
-        // Add the mathematical symbols coming from another SVG
-        var mathjaxSvg = $('#MathJax_SVG_glyphs').get(0).outerHTML;
-        html = html.replace(/(<svg[^>]+>)/, "$1" + mathjaxSvg);
-        
-        // Add the stripped colors coming from another SVG
-        var defs = $('#defs').get(0).innerHTML;
-        html = html.replace(/(<svg[^>]+>)/, "$1" + defs);
-        
-        // Remove the rezooming
-        html = html.replace(/(svg-pan-zoom_viewport.*transfor)m/, "$1");
-        
-        // Fix Safari href
-        html = html.replace(/NS[0-9]+:href/g, 'xlink:href');
-        
-        // Replace html entities by xml entities
-        html = html.replace(/&nbsp;/g, '&#032;');
-        
-        // Show image
-        window.location.href = 'data:image/svg+xml;utf8,' +  unescape(html);
     }
 
     

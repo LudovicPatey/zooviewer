@@ -4,7 +4,7 @@ var Export = {
     outputSVG: function() {
         
         var svg = this.toSVG();
-        this.download('data:image/svg+xml;utf8,' +  unescape(svg), 'diagram.svg');
+        this.download('data:image/svg+xml;utf8,' +  encodeURIComponent(svg), 'diagram.svg');
         
     },
     

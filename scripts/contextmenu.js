@@ -29,6 +29,7 @@ var Contextmenu = {
          {title: "Unselect all", action: function() { Select.unselectAll(); } },
                {title: "Export to", children : [
                     {title: "SVG image", action: function() { Export.outputSVG(); }},
+                    {title: "PNG image", action: function() { Export.outputPNG(); }},
                     {title: "Tikz graph", action: function() { Export.outputTikz(); }},
                     {title: "DOT file", action: function() { Export.outputDot(false); }},
                     {title: "DOT file with TeX labels", action: function() { Export.outputDot(true); }}

@@ -4,10 +4,16 @@ var Export = {
     outputSVG: function() {
         
         var svg = this.toSVG();
-        window.location.href = 'data:image/svg+xml;utf8,' +  unescape(svg);
+        this.download('data:image/svg+xml;utf8,' +  unescape(svg), 'diagram.svg');
         
     },
+    
+    outputPNG: function() {
+
+        this.download(this.toPNG(), 'diagram.png');
         
+    },
+    
     outputDot: function(useLabels) {
         
         var text = this.toDot({
@@ -18,7 +24,7 @@ var Export = {
             fixNodeSize : useLabels
         
         });
-        this.download(text, 'diagram.dot');
+        this.downloadText(text, 'diagram.dot');
         //document.write('<pre>' + text + '</pre>');
     },
         
@@ -30,14 +36,18 @@ var Export = {
            displayStrongOpenImplications : Graph.options.displayStrongOpenImplications
            
         });
-        this.download(text, 'diagram.tex');
+        this.downloadText(text, 'diagram.tex');
         //document.write('<pre>' + text + '</pre>');
         
     },
     
-    download: function(text, filename) {
+    downloadText: function(text, filename) {
+        this.download('data:text/plain;charset=utf-8,' + encodeURIComponent(text), filename);
+    },
+    
+    download: function(url, filename) {
         var e = document.createElement('a');
-        e.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        e.setAttribute('href', url);
         e.setAttribute('download', filename);
         e.style.display = 'none';
         document.body.appendChild(e);
@@ -68,6 +78,21 @@ var Export = {
         html = html.replace(/&nbsp;/g, '&#032;');
         
         return html;
+    },
+    
+    toPNG: function() {
+        
+        // Get the SVG of the graph
+        var svg = this.toSVG();
+        var p = $('#graph svg polygon:first').get(0).getBBox();
+        var canvas = $('<canvas width="' + p.width + '" height="' + p.height + 'px"></canvas');
+        $(document.body).append(canvas);
+        canvg(canvas.get(0), svg, { ignoreDimensions : true });
+
+        var png = canvas.get(0).toDataURL('image/png');
+        canvas.remove();
+        
+        return png;
     },
     
     toDot: function(options){

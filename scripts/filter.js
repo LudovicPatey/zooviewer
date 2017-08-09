@@ -78,7 +78,7 @@ var Filter = {
         
         var restrictToTagsNode = $('#filter .restrict_tags h3 input');
         $('#filter .restrict_tags #tags label').each(function() {
-            $('input', this).prop('checked', f.tags.indexOf($(this).attr('name')) != -1);
+            $('input', this).prop('checked', f.tags.indexOf(parseInt($(this).attr('name'))) != -1);
          });
         restrictToTagsNode.prop('checked', f.restrictToTags);
         restrictToTagsNode.trigger('change');
@@ -107,7 +107,7 @@ var Filter = {
         f.tags = [];
         f.restrictToTags =  $('#filter .restrict_tags h3 input').is(':checked');
         $('#filter .restrict_tags #tags input:checked').each(function() {
-            f.tags.push($(this).parent().attr('name'));
+            f.tags.push(parseInt($(this).parent().attr('name')));
          });
         
         // Restrict to nodes comparable with a list

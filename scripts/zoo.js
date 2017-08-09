@@ -256,6 +256,7 @@ var Zoo = {
     },
     
     changeEdgeKind: function(key) {
+        key = parseInt(key);
         this.meta.selectedEdgeKind = key;
         var urlData = this.getUrlData();
         urlData.edgeKind = key;
@@ -264,6 +265,7 @@ var Zoo = {
     },
     
     changeColoring: function(key) {
+        key = parseInt(key);
         this.meta.selectedColoring = key;
         this.updateColoringLegend();
         if(!Select.hasSelectedNodes()) {

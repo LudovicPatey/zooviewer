@@ -111,16 +111,6 @@ var Zoo = {
     create: function(zoo) {
 
         this.nodes = zoo.nodes;
-        
-        
-        var urlData = this.getUrlData();
-        this.diffs = {
-            implications: [],
-            separations: []
-        };
-        if(urlData.diffs) {
-            this.diffs = urlData.diffs;
-        }
 
         // Transform meta into functions
         this.initMeta(zoo.meta);
@@ -137,6 +127,16 @@ var Zoo = {
         }
         
         this.createPanel();
+        
+        var urlData = this.getUrlData();
+        this.diffs = {
+        implications: [],
+        separations: []
+        };
+        if(urlData.diffs) {
+            this.diffs = urlData.diffs;
+        }
+        this.dataToDiffPanel();
         
         // Draw a new graph
         this.newGraph();
@@ -317,7 +317,44 @@ var Zoo = {
         var urlData = this.getUrlData();
         urlData.diffs = this.diffs;
         this.setUrlData(urlData);
+        this.dataToDiffPanel();
         this.newGraph();
+    },
+    
+    removeEdge : function(type, i) {
+        var diffs = this.diffs[type];
+        i = parseInt(i);
+        diffs.splice(diffs.indexOf(i), 1);
+        var urlData = this.getUrlData();
+        urlData.diffs = this.diffs;
+        this.setUrlData(urlData);
+        this.dataToDiffPanel();
+        this.newGraph();
+    },
+    
+    dataToDiffPanel: function() {
+        var n = $('.local_modifications + *');
+        if(this.diffs.implications.length == 0 && this.diffs.separations.length == 0) {
+            n.replaceWith('<p>You have not made any local modification yet. Select nodes, right-click'
+                          + ' and choose "Add arrows" to add implications or separations.</p>');
+        }
+        else {
+            var ul = $('<ul></ul>');
+            n.replaceWith(ul);
+            for(var i=0; i<this.diffs.implications.length; i++) {
+                var diff = this.diffs.implications[i];
+                ul.append('<li><label><input type="checkbox" checked="checked" onchange="Zoo.removeEdge(\'implications\', ' + i + ')" /> '
+                          + diff.from + ' implies ' + diff.to + ' by the relation "'
+                          + this.meta.edgeKinds[diff.kind].label + '"</label></li>');
+            }
+            for(var i=0; i<this.diffs.separations.length; i++) {
+                var diff = this.diffs.separations[i];
+                ul.append('<li><label><input type="checkbox" checked="checked" onchange="Zoo.removeEdge(\'separations\', ' + i + ')" /> '
+                          + diff.from + ' does not imply ' + diff.to + ' by the relation "'
+                          + this.meta.edgeKinds[diff.kind].label + '"</label></li>');
+            }
+        }
     }
+    
 };
 

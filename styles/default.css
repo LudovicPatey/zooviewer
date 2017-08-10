@@ -238,8 +238,16 @@ a:hover {
     display: none;
 }
 
-#zoo input {
+#zoo input[type="file"] {
     width: 200px;
+}
+
+#zoo .local_modifications + ul input {
+    margin-right: 10px;
+}
+
+#zoo .local_modifications + ul li + li {
+    margin-top: 5px;
 }
 
 /* Contextual panel */

@@ -324,3 +324,41 @@ a:hover {
     font-size: 12px;
     white-space: nowrap;
 }
+
+.ui-menu .ui-menu-divider {
+    margin: 1px;
+}
+
+
+.ui-menu .ui-menu-item-wrapper {
+    padding-right: 20px !important;
+    padding-left: 10px !important;
+}
+
+
+/* Accordion */
+
+#panel {
+    position: absolute;
+    bottom: 0px;
+    top: 0px;
+    height: 100%;
+}
+
+#panel legend {
+    border-radius: 0px;
+    border: 0px;
+    border-bottom: 1px solid #CCCCCC;
+    outline: none;
+}
+
+#panel legend + * {
+    border-radius: 0px;
+    border: 0px;
+}
+
+#panel .ui-accordion-content {
+    padding: 0px;
+}
+
+

@@ -6,6 +6,7 @@ var Select = {
     
     coloring: {
         "label" : "Selection",
+        "selection": true,
         "colors" : [
             { color: "yellow", label: "Selected nodes"},
             { color: "lightgreen", label: "Equivalent to selected"},

@@ -181,9 +181,18 @@ var Filter = {
         this.addNodesToList(content, sel);
     },
     
-    applyComparable: function(comparable) {
+    applyTagRestrictions: function(active, tags) {
         var f = this.filters;
-        f.restrictToComparable = true;
+        f.restrictToTags = active;
+        f.tags = tags;
+        this.dataToPanel();
+        this.applyFilter();
+    },
+    
+    applyComparable: function(active, comparable, provably) {
+        var f = this.filters;
+        f.comparableOptions.provably = provably;
+        f.restrictToComparable = active;
         f.comparableList = comparable;
         this.dataToPanel();
         this.applyFilter();
@@ -191,9 +200,9 @@ var Filter = {
     
     // Restrict further the current graph by excluding a list of nodes
     // With immediate application
-    applyExclusion: function(exclusion) {
+    applyExclusion: function(active, exclusion) {
         var f = this.filters;
-        f.excludeElements = true;
+        f.excludeElements = active;
         f.exclusionList = f.exclusionList.concat(exclusion);
         this.dataToPanel();
         this.applyFilter();

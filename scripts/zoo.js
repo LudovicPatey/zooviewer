@@ -20,9 +20,15 @@ var Zoo = {
     
     initPanel: function() {
         
+        
         // Make the parts collapsible
-        $('#panel legend').click(function() {
+        /*$('#panel legend').click(function() {
             $(this).next().toggle('blind', {'direction': 'up'});
+        });*/
+        
+        $('#panel').accordion({
+              header: 'legend',
+              heightStyle: 'content'
         });
     
     },

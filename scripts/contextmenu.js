@@ -25,6 +25,8 @@ var Contextmenu = {
     },
     
     createGlobalMenu: function() {
+        
+        // Compute colorings menu
         var nodeColorings = [];
         for(var i=0; i<Zoo.meta.colorings.length; i++) {
             var coloring = Zoo.meta.colorings[i];
@@ -33,13 +35,36 @@ var Contextmenu = {
              var selected = i == Zoo.meta.selectedColoring;
                 nodeColorings.push({
                    title: coloring.label,
-                                   className: 'ui-icon-check',
-                                   uiIcon : selected ? 'ui-icon ui-menu-icon ui-icon-check' : null,
+                   uiIcon : selected ? 'ui-icon ui-menu-icon ui-icon-check' : null,
                    action: function() {
                         Zoo.changeColoring(i)
                    }
                 });
             })(i);
+        }
+        
+        // Compute tags menu
+        var tags = [];
+        for(var i=0; i<Zoo.meta.tags.length; i++) {
+            var tag = Zoo.meta.tags[i];
+            (function(i) {
+             var selected = Filter.filters.tags.indexOf(i) != -1 ? 'checked="checked"' : '';
+             var label = $('#tags label[name=' + i + '] .wrapper').html();
+             tags.push({
+                title: label,
+                uiIcon : selected ? 'ui-icon ui-menu-icon ui-icon-check' : null,
+                action: function() {
+                   var tags = Filter.filters.tags;
+                   if(selected) {
+                       tags.splice(tags.indexOf(i), 1);
+                   }
+                   else {
+                       tags.push(i);
+                   }
+                   Filter.applyTagRestrictions(true, tags);
+                }
+                });
+             })(i);
         }
         
         
@@ -63,6 +88,7 @@ var Contextmenu = {
                 },
             ]},
             {title: "----"},
+            {title: "Show only tags", children : tags},
             {title: "Color nodes", children : nodeColorings},
             {title: "View arrows", children : [
                {

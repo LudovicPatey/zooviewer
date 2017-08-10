@@ -66,7 +66,7 @@ var Filter = {
         for(var i=0; i<Zoo.meta.tags.length; i++) {
             var tag = Zoo.meta.tags[i];
             var checked = this.filters.tags.indexOf(i) != -1 ? 'checked="checked"' : '';
-            tagNode.append('<label name="' + i + '"><input type="checkbox" ' + checked + ' /> ' + tag.label + '</label>');
+            tagNode.append('<label name="' + i + '"><input type="checkbox" ' + checked + ' /> <span class="wrapper">' + tag.label + '</span></label>');
         }
         MathJax.Hub.Queue(["Typeset", MathJax.Hub, tagNode.get(0)]);
 

@@ -202,10 +202,44 @@ var Graph = {
                         impls[key1] = impls[key1] ? impls[key1] : {};
                         impls[key1][key2] = true;
                         break;
-                        
                 }
             }
         }
+        
+        // Add implication diffs
+        for(var i=0; i<Zoo.diffs.implications.length; i++) {
+            var diff = Zoo.diffs.implications[i];
+            
+            // If this is not this kind of edge, skip
+            if(diff.kind != Zoo.meta.selectedEdgeKind) continue;
+            
+            for(var key1 in this.nodes) {
+                for(var key2 in this.nodes) {
+                    if(impls[key1] && impls[key1][diff.from] && impls[diff.to] && impls[diff.to][key2]) {
+                        impls[key1][key2] = true;
+                    }
+                }
+            }
+        }
+        
+        
+        // Add non-implication diffs
+        for(var i=0; i<Zoo.diffs.separations.length; i++) {
+            var diff = Zoo.diffs.separations[i];
+            
+            // If this is not this kind of edge, skip
+            if(diff.kind != Zoo.meta.selectedEdgeKind) continue;
+
+            for(var key1 in this.nodes) {
+                for(var key2 in this.nodes) {
+                    if(impls[diff.from] && impls[diff.from][key1] && impls[key2] && impls[key2][diff.to]) {
+                        nonImpls[key1] = nonImpls[key1] ? nonImpls[key1] : {};
+                        nonImpls[key1][key2] = true;
+                    }
+                }
+            }
+        }
+        
         this.implications = impls;
         this.nonImplications = nonImpls;
     },

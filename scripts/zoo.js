@@ -3,6 +3,8 @@ var Zoo = {
 
     nodes: null, // The total list of all nodes
     meta: null, // The database-specific functions
+    diffs: null, // The local modification of the database
+    
     //tags: null, // The list of all tags
 
     // Initialize the zoo once for all
@@ -109,6 +111,16 @@ var Zoo = {
     create: function(zoo) {
 
         this.nodes = zoo.nodes;
+        
+        
+        var urlData = this.getUrlData();
+        this.diffs = {
+            implications: [],
+            separations: []
+        };
+        if(urlData.diffs) {
+            this.diffs = urlData.diffs;
+        }
 
         // Transform meta into functions
         this.initMeta(zoo.meta);
@@ -294,6 +306,18 @@ var Zoo = {
             }
             ul.append('<li><label><div class="node" style="background: ' + background + '">&nbsp;</div> ' + coloring.colors[i].label + '</label>');
         }
+    },
+    
+    addEdge : function(kind, type, from, to) {
+        this.diffs[type].push({
+             kind : kind,
+             from : from.key,
+             to : to.key
+        });
+        var urlData = this.getUrlData();
+        urlData.diffs = this.diffs;
+        this.setUrlData(urlData);
+        this.newGraph();
     }
 };
 

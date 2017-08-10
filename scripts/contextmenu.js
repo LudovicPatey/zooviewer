@@ -128,6 +128,38 @@ var Contextmenu = {
         }
         
         var multipleSelected = Select.getSelectionList().length > 1;
+        
+        // Compute a list of possible database additions
+        var sels = Select.getSelectionList();
+        var add = [];
+        for(var i=0; i<sels.length; i++) {
+            var from = sels[i];
+            for(var j=0; j<sels.length; j++) {
+                var to = sels[j];
+
+                // Don't add arrows if the link is already determined
+                if(i == j) continue;
+                if(Graph.implications[from.key] && Graph.implications[from.key][to.key]) continue;
+                if(Graph.nonImplications[from.key] && Graph.nonImplications[from.key][to.key]) continue;
+                (function(from, to) {
+                 
+                    add.push({
+                         title : "implication from " + from.key + " to " + to.key,
+                         action: function() {
+                             Zoo.addEdge(Zoo.meta.selectedEdgeKind, "implications", from, to);
+                         }
+                    });
+                    add.push({
+                          title : "separation from " + from.key + " to " + to.key,
+                          action: function() {
+                          Zoo.addEdge(Zoo.meta.selectedEdgeKind, "separations", from, to);
+                          }
+                    });
+                })(from, to);
+                
+            }
+        }
+        
 
         return [
             {title: "Justify", children : [
@@ -138,7 +170,8 @@ var Contextmenu = {
                 Proofs.showArrows(Select.getSelectionList());
                 }, disabled: !multipleSelected}
             ]},
-            {title: "Exclude", children : [
+            {title: "Add arrow", children : add, disabled: add.length == 0},
+            {title: "Exclude nodes", children : [
                 {title: "this node", action: function() {
                 Filter.applyExclusion(true, [data]);
                 }},

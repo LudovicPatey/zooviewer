@@ -23,6 +23,13 @@ var Select = {
             this.selectedNodes = {};
         }
         else {
+            if(options.selection) {
+                this.selectedNodes = {};
+                for(var i=0; i<options.selection.length; i++) {
+                    var key = options.selection[i];
+                    this.selectedNodes[key] = Graph.nodes[key];
+                }
+            }
             for(var key in this.selectedNodes) {
                 if(!Graph.nodes[key]) {
                     delete this.selectedNodes[key];
@@ -155,6 +162,19 @@ var Select = {
                 
             }
         }
+        
+        // Save selection list to URL
+        var urlData = Zoo.getUrlData();
+        var sels = [];
+        for(var key in this.selectedNodes) {
+            sels.push(key);
+        }
+        urlData.select = {
+            keepSelection : true,
+            selection : sels
+        };
+        Zoo.setUrlData(urlData);
+        
         Graph.colorNodes();
     },
     

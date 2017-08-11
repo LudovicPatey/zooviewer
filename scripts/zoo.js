@@ -139,7 +139,9 @@ var Zoo = {
         this.dataToDiffPanel();
         
         // Draw a new graph
-        this.newGraph();
+        this.newGraph({
+            select : urlData.select
+        });
 
     },
     

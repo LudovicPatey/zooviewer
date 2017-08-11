@@ -7,6 +7,7 @@ var Graph = {
     openImplications: null, // map of all open implications
     canonical: null, // Mapping a statement to a canonical equivalent statement
     meta: null,
+    rendered: false,
     
     options: {
       displayNonImplications: false,
@@ -28,6 +29,9 @@ var Graph = {
     svgDefs: null,
     
     init: function(options) {
+        var options = $.extend({ select : {} }, options);
+        
+        this.rendered = false;
         this.meta = options.meta;
         this.filterNodes();
         this.filterImplications();
@@ -42,14 +46,14 @@ var Graph = {
         this.svgPatterns = {};
         
         // Make the graph clickable
-        Select.init({
+        Select.init($.extend({
             select: function() {
                 Graph.updateContext();
             },
             unselect: function() {
                 Graph.updateContext();
             }
-        });
+        }, options.select));
         
         this.updateContext();
         Proofs.init();
@@ -90,6 +94,8 @@ var Graph = {
         
         // Process the nodes to make them clickable, and attach metadata to it
         this.processNodes();
+        
+        this.rendered = true;
         
         // Color each node
         this.colorNodes();
@@ -452,6 +458,7 @@ var Graph = {
     
     // Color the nodes in function of an arbitrary callback function
     colorNodes: function() {
+        if(!this.rendered) return;
         $('.node', this.svg).each(function(){
                                   
             var color = Graph.meta.colorNode.call(this, $(this).data('data'), {});

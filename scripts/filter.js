@@ -141,8 +141,17 @@ var Filter = {
         urlData.filters.exclusionList = Zoo.nodesToKeys(urlData.filters.exclusionList);
         Zoo.setUrlData(urlData);
         
-        Select.unselectAll();
-        Zoo.newGraph();
+        /*if(!keepSelection) {
+            Select.unselectAll();
+        }*/
+        
+        
+        Zoo.newGraph({
+             select : {
+                     keepSelection : true
+             }
+        });
+        
     },
     
     // Remove an element from the list in the panel

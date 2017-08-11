@@ -86,6 +86,12 @@ var Contextmenu = {
                     action: function() { Filter.applyExclusion(false, []) },
                     disabled: !$('#filter .exclude_nodes h3 input').is(':checked')
                 },
+                {
+                    title: "local modifications",
+                    action: function() { Zoo.clearLocalModifications() },
+                    disabled: !$('#zoo .local_modifications + *').is('ul')
+                }
+                                         
             ]},
             {title: "----"},
             {title: "Show only tags", children : tags},
@@ -184,11 +190,11 @@ var Contextmenu = {
                         Filter.applyComparable(true, Select.getSelectionList(), true);
                 }},
                {title: "nodes provably in between the selected nodes", action: function() {
-               Filter.applyComparable(true, Select.getSelectionList(), true);
+                        Filter.applyComparable(true, Select.getSelectionList(), true);
                }}
             ]},
             {title: "Unselect all but this node", action: function() {
-            Select.unselectAll(); Select.select(data);
+                    Select.unselectAll(); Select.select(data);
             } }];
     }
     

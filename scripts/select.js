@@ -19,12 +19,22 @@ var Select = {
     },
     
     init: function(options) {
-        this.selectedNodes = {};
+        if(!options.keepSelection) {
+            this.selectedNodes = {};
+        }
+        else {
+            for(var key in this.selectedNodes) {
+                if(!Graph.nodes[key]) {
+                    delete this.selectedNodes[key];
+                }
+            }
+        }
         this.coloring.coloring = this.colorNode;
         this.options = $.extend({
             select: function() {},
             unselect: function(){}
         }, options);
+        this.updateColoringFunction();
         
     },
     

@@ -130,8 +130,8 @@ var Zoo = {
         
         var urlData = this.getUrlData();
         this.diffs = {
-        implications: [],
-        separations: []
+            implications: [],
+            separations: []
         };
         if(urlData.diffs) {
             this.diffs = urlData.diffs;
@@ -197,8 +197,8 @@ var Zoo = {
     },
     
     // Draw a new graph
-    newGraph: function() {
-        Graph.init({
+    newGraph: function(options) {
+        Graph.init($.extend({
            meta: {
                filterEdge: this.meta.edgeKinds[this.meta.selectedEdgeKind].func,
                colorNode: this.meta.colorings[this.meta.selectedColoring].coloring,
@@ -207,7 +207,7 @@ var Zoo = {
                }, this.meta.graphviz)
            },
            finished: function() { Zoo.enablePanel() }
-       });
+        }, options));
     },
     
     nodesToKeys: function(nodes) {
@@ -279,7 +279,11 @@ var Zoo = {
         var urlData = this.getUrlData();
         urlData.edgeKind = key;
         this.setUrlData(urlData);
-        this.newGraph();
+        this.newGraph({
+            select : {
+                keepSelection: true
+            }
+        });
     },
     
     changeColoring: function(key) {
@@ -318,7 +322,11 @@ var Zoo = {
         urlData.diffs = this.diffs;
         this.setUrlData(urlData);
         this.dataToDiffPanel();
-        this.newGraph();
+        this.newGraph({
+            select : {
+                keepSelection: true
+            }
+        });
     },
     
     removeEdge : function(type, i) {
@@ -329,7 +337,11 @@ var Zoo = {
         urlData.diffs = this.diffs;
         this.setUrlData(urlData);
         this.dataToDiffPanel();
-        this.newGraph();
+        this.newGraph({
+          select : {
+              keepSelection: true
+          }
+        });
     },
     
     dataToDiffPanel: function() {
@@ -354,6 +366,22 @@ var Zoo = {
                           + this.meta.edgeKinds[diff.kind].label + '"</label></li>');
             }
         }
+    },
+    
+    clearLocalModifications: function() {
+        this.diffs = {
+            implications: [],
+            separations: []
+        };
+        var urlData = this.getUrlData();
+        urlData.diffs = this.diffs;
+        this.setUrlData(urlData);
+        this.dataToDiffPanel();
+        this.newGraph({
+            select : {
+                keepSelection: true
+            }
+        });
     }
     
 };

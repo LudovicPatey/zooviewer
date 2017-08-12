@@ -369,4 +369,19 @@ a:hover {
     padding: 0px;
 }
 
+/* Comparison window */
+
+#window .comparison_window p {
+    font-size: 12px;
+    padding: 5px 0px 5px 10px;
+    background-color: #EEEEEE;
+    border-bottom: 1px solid #CCCCCC;
+    font-weight: normal;
+    display: block;
+}
+
+#window .comparison_window > svg {
+    width: 480px;
+    padding: 20px 10px 20px 10px;
+}
 

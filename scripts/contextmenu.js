@@ -125,6 +125,9 @@ var Contextmenu = {
     },
     
     createNodeMenu : function(data) {
+        
+        var menu = [];
+        
         Select.select(data);
         var hasProperties = false;
         for(var key in data.properties) {
@@ -133,69 +136,111 @@ var Contextmenu = {
             }
         }
         
-        var multipleSelected = Select.getSelectionList().length > 1;
+        var sels = Select.getSelectionList();
+        var multipleSelected = sels.length > 1;
+        
+        menu.push({
+            title: "Unselect all but this node",
+            action: function() {
+                Select.unselectAll(); Select.select(data);
+            }
+        });
+        
+        menu.push({ title : "----" });
+        
+        menu.push({title: "Exclude nodes", children : [
+                                                       {title: "this node", action: function() {
+                                                       Filter.applyExclusion(true, [data]);
+                                                       }},
+                                                       {title: "the selected nodes", action: function() {
+                                                       Filter.applyExclusion(true, Select.getSelectionList());
+                                                       }}
+                                                       ]});
+        
+        menu.push({
+                  title: "Restrict to",
+                  children : [
+                              {title: "nodes in between the selected nodes", action: function() {
+                              Filter.applyComparable(true, Select.getSelectionList(), true);
+                              }},
+                              {title: "nodes provably in between the selected nodes", action: function() {
+                              Filter.applyComparable(true, Select.getSelectionList(), true);
+                              }}
+                              ]
+                  });
+    
+        menu.push({title: "Justify", children : [
+             {title: "properties of this node", action: function() {
+             Proofs.showProperties(data);
+             }, disabled: !hasProperties},
+             {title: "arrows between the selected nodes", action: function() {
+             Proofs.showArrows(Select.getSelectionList());
+             }, disabled: !multipleSelected}
+        ]});
+        
+        
+        // Compare over relations
+        if(Zoo.meta.edgeKinds.length > 1) {
+            var comparison = [];
+
+            for(var i=0; i<sels.length; i++) {
+                var from = sels[i];
+                for(var j=0; j<sels.length; j++) {
+                    var to = sels[j];
+                    if(i == j) continue;
+                    (function(from, to) {
+                         comparison.push({
+                              title : "implication from " + from.key + " to " + to.key,
+                                  action: function() {
+                                    Compare.open(from, to);
+                              }
+                          });
+                     })(from, to);
+                }
+            }
+
+            menu.push({
+                title: "Compare over relations",
+                children : comparison,
+                disabled : sels.length != 2
+            });
+        }
         
         // Compute a list of possible database additions
-        var sels = Select.getSelectionList();
         var add = [];
         for(var i=0; i<sels.length; i++) {
             var from = sels[i];
             for(var j=0; j<sels.length; j++) {
                 var to = sels[j];
-
+                
                 // Don't add arrows if the link is already determined
                 if(i == j) continue;
                 if(Graph.implications[from.key] && Graph.implications[from.key][to.key]) continue;
                 if(Graph.nonImplications[from.key] && Graph.nonImplications[from.key][to.key]) continue;
                 (function(from, to) {
                  
-                    add.push({
-                         title : "implication from " + from.key + " to " + to.key,
-                         action: function() {
-                             Zoo.addEdge(Zoo.meta.selectedEdgeKind, "implications", from, to);
-                         }
-                    });
-                    add.push({
+                 add.push({
+                          title : "implication from " + from.key + " to " + to.key,
+                          action: function() {
+                          Zoo.addEdge(Zoo.meta.selectedEdgeKind, "implications", from, to);
+                          }
+                          });
+                 add.push({
                           title : "separation from " + from.key + " to " + to.key,
                           action: function() {
                           Zoo.addEdge(Zoo.meta.selectedEdgeKind, "separations", from, to);
                           }
-                    });
-                })(from, to);
+                          });
+                 })(from, to);
                 
             }
         }
         
+        menu.push({ title : "----" });
+        menu.push({title: "Add arrow", children : add, disabled: add.length == 0});
+        
 
-        return [
-            {title: "Justify", children : [
-                {title: "properties of this node", action: function() {
-                Proofs.showProperties(data);
-                }, disabled: !hasProperties},
-                {title: "arrows between the selected nodes", action: function() {
-                Proofs.showArrows(Select.getSelectionList());
-                }, disabled: !multipleSelected}
-            ]},
-            {title: "Add arrow", children : add, disabled: add.length == 0},
-            {title: "Exclude nodes", children : [
-                {title: "this node", action: function() {
-                Filter.applyExclusion(true, [data]);
-                }},
-                {title: "the selected nodes", action: function() {
-                Filter.applyExclusion(true, Select.getSelectionList());
-                }}
-            ]},
-            {title: "Restrict to", children : [
-                {title: "nodes in between the selected nodes", action: function() {
-                        Filter.applyComparable(true, Select.getSelectionList(), true);
-                }},
-               {title: "nodes provably in between the selected nodes", action: function() {
-                        Filter.applyComparable(true, Select.getSelectionList(), true);
-               }}
-            ]},
-            {title: "Unselect all but this node", action: function() {
-                    Select.unselectAll(); Select.select(data);
-            } }];
+        return menu;
     }
     
 };

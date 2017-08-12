@@ -29,25 +29,19 @@ var Proofs = {
     },
     
     showProperties: function(node) {
-        var content = $('<div></div>');
-        var h3 = $('<h3>Properties of the node</h3>');
-        
-        content.html(h3);
+
         var ul = $('<ul></ul>');
-        content.append(ul);
         for(var key in node.properties) {
             this.buildProof(ul, node.properties[key]);
         }
-        this.display(content);
-        MathJax.Hub.Queue(["Typeset",MathJax.Hub, content.get(0)]);
+        Window.open({
+                    title : "Properties of the node",
+                    content : ul
+        });
     },
     
     showArrows: function(sel) {
-        var content = $('<div></div>');
-        var h3 = $('<h3>Justification of the arrows</h3>');
-        content.html(h3);
         var ul = $('<ul></ul>');
-        content.append(ul);
         for(var i=0; i<sel.length; i++) {
             for(var j=0; j<sel.length; j++) {
                 if(i == j) continue;
@@ -57,20 +51,10 @@ var Proofs = {
                 }
             }
         }
-        this.display(content);
-        MathJax.Hub.Queue(["Typeset",MathJax.Hub, content.get(0)]);
-    },
-    
-    display : function(content) {
-        Zoo.disablePanel();
-        $('#window').html(content).show();
-        $('#block').click(Proofs.hide);
-    },
-    
-    hide: function() {
-        $('#window').hide();
-        $('#block').unbind('click', Proofs.hide);
-        Zoo.enablePanel();
+        Window.open({
+                    title : "Justification of the arrows",
+                    content : ul
+        });
     },
     
     buildProof(ul, prop) {

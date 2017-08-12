@@ -22,6 +22,7 @@
         <!-- Zoo viewer -->
         <link rel="stylesheet" type="text/css" media="screen,print" href="styles/default.css" />
         <script type="text/javascript" src="scripts/tools.js"></script>
+        <script type="text/javascript" src="scripts/window.js"></script>
         <script type="text/javascript" src="scripts/zoo.js"></script>
         <script type="text/javascript" src="scripts/graph.js"></script>
         <script type="text/javascript" src="scripts/proofs.js"></script>
@@ -29,6 +30,7 @@
         <script type="text/javascript" src="scripts/contextmenu.js"></script>
         <script type="text/javascript" src="scripts/export.js"></script>
         <script type="text/javascript" src="scripts/filter.js"></script>
+        <script type="text/javascript" src="scripts/compare.js"></script>
         
         
         <!-- MathJax -->
@@ -59,7 +61,7 @@
                 <h3><label>Database</label></h3>
                 <p><select onchange="Zoo.load(this.value)">
                     <option default="default" value="data/menagerie.json">Computability menagerie</option>
-                    <option value="data/rmzoo.json?17">Reverse mathematics</option>
+                    <option value="data/rmzoo.json">Reverse mathematics</option>
                     <option value="data/e-verse.json">Enumeration degrees</option>
                     <option value="data/randomness.json">Randomness zoo</option>
                     <option value="custom">Load a custom zoo</option>

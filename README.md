@@ -178,7 +178,8 @@ A same set of nodes might be related to each other by various kind of relations.
 
 	{
 		"label" : "Name of the edge kind",
-		"functionBody" : "..."
+		"functionBody" : "...",
+		"node" : { ... } // Optional
 	}
 
 The *label* should be a short string which will be displayed in a list, so that the user can choose which edge kind to use.
@@ -191,6 +192,24 @@ The *functionBody* key contains the body of a javascript function, with *node* a
 Here, we suppose that the edges have an *implication* property, specifying whether the source implies the destination, and equal to null if it is unknown.
 
 > **Important:** An edge kind should be a transitive relation. In other words, the transitive closure of the arrows should be precomputed by the JSON file.
+
+The *node* key may contain an *Edge kind node* (see below). This information is useful only if there are multiple edge kinds. This enables the viewer to display, once fixed a pair of standard node, a graph of edge kind relations. This way, the user will be able to compare the edge kinds for which the given pair has an implication, or not.
+
+### Edge kind node
+
+An edge kind node is of the form
+
+	{
+		"label" : "a label which may contain some Tex",
+		"key" : "a short unique string",
+		"edges" : [ ... ]
+	}
+
+The *label* key is the string which will be displayed in the graph of edge kinds, when comparing two fixed standard nodes over various edge kinds. It may contain some TeX.
+
+The *key* key is a short string which is unique among the edge kinds. This is used for the edges relation.
+
+The *edges* key contains a list of other edge kind keys. There is an arrow from an edge kind to another edge kind if having an implication of the first kind implies having an implication of the second kind. The relation between edge kinds in not transitive.
 
 ## Credits
 

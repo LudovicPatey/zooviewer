@@ -41,6 +41,20 @@ var Zoo = {
         Panel.disable();
         $.getJSON(zooUrl, function(zoo) { Zoo.create(zoo) });
     },
+    
+    getTagsOfNode : function(node) {
+        var tags = [];
+        for(var i=0; i<this.meta.tags.length; i++) {
+            var tag = this.meta.tags[i];
+            if(tag.tag && tag.tag.call(this, node)) {
+                tags.push(tag);
+            }
+            else if(node.tags && node.tags.indexOf(tag.key) != -1) {
+                tags.push(tag);
+            }
+        }
+        return tags;
+    },
 
     // Create the zoo from a database
     create: function(zoo) {

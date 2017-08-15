@@ -11,7 +11,6 @@ var Panel = {
         }
         $('#zoo select').trigger('change');
         
-        
         // Make the panel parts collapsible
         $('#panel').accordion({
           active : 3, // By default, the contextual panel will be active
@@ -42,7 +41,7 @@ var Panel = {
             div.append('<h3>About</h3>');
             div.append('<p>' + about.description + '</p>');
         }
-
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub, div.find('p').get(0)]);
     },
     
     disable: function() {

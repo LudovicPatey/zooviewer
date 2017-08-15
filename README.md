@@ -102,7 +102,7 @@ It is of the form
 		"value" : anything (null if open),
 		"justification" : {
 			"weight" : the weight
-			"direct": string with a direct justification (with possible TeX),
+			"direct": string with a direct justification (with possible TeX and HTML),
 			"composite" : array of property uids for a composite justification
 		}
 	}
@@ -135,7 +135,7 @@ The *meta* key in the root contains meta information, such as the coloring funct
 
 The *tags*, *edgeKinds* and *coloring* keys contain respectively a list of tags, edge kinds, and of colorings (described below).
 
-The *about* key is optional, and contains a dictionnary of informations about the graph. In particular, *description* contains a brief description (with possible TeX) of the database. It could basically contain some information about the zoo keeper, his email, a link to the source database, ... The *version* key should contain an integer, and is purely informative, as it is not used currently by the front-end.
+The *about* key is optional, and contains a dictionnary of informations about the graph. In particular, *description* contains a brief description (with possible TeX and HTML) of the database. It could basically contain some information about the zoo keeper, his email, a link to the source database, ... The *version* key should contain an integer, and is purely informative, as it is not used currently by the front-end.
 
 The *graphviz* key contains a dictionary of options for graphviz, the rendering engine. The only option supported yet is *rankdir*, which specifies the orientation of the graph (TB for Top-Bottom, BT for Bottom-Top, LR for Left-Right and RL for... guess what).
 

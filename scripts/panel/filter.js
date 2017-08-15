@@ -47,7 +47,7 @@ var Filter = {
         $('input:checkbox:first', node).prop('checked', true);
         $('input:checkbox', node).trigger('change');
         
-        this.initTags();
+        this.createTags();
         
         var urlData = Tools.getUrlData();
         if(urlData.filters) {
@@ -60,7 +60,7 @@ var Filter = {
     
     // Init the filter panel
     // Call it once per database
-    initTags: function() {
+    createTags: function() {
         var tagNode = $('#tags');
         tagNode.empty();
         for(var i=0; i<Zoo.meta.tags.length; i++) {

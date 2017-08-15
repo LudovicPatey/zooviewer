@@ -26,10 +26,12 @@ var Contextual = {
     
     updateSingleNode: function(node) {
         
+        var div = this.div;
         this.div.html('<h3>Selected node</h3>');
         this.div.append('<p class="label"></p>');
-        this.div.find('.label').append($('.MathJax_SVG > *', node.div).clone());
-        
+        Tools.getNodesSize([node], function() {
+            div.find('.label').append($('.MathJax_SVG > *', node.div).clone());
+                           });
         this.updateDefinition(node);
         this.updateProperties(node);
         this.updateTags(node);

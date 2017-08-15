@@ -100,7 +100,6 @@ It is of the form
 	{
 		"uid" : unique id,
 		"value" : anything (null if open),
-		"description" : string describing the meaning of the value (with possible TeX),
 		"justification" : {
 			"weight" : the weight
 			"direct": string with a direct justification (with possible TeX),
@@ -111,8 +110,6 @@ It is of the form
 The *uid* is a unique numerical identifier.  It is used for the composite justifications, which refer to other properties.
 
 The *value* key contains the value of the property, or null if it is not known. 
-
-The *description* key contains a string describing the meaning of the value (and not the meaning of the property). For example, in a human zoo, if a human node has a property "age" equal to 5, the description could be "The age of this person is 5". The description may contain TeX.
 
 The *justification* contains the information justifying the fact that this property has this particular value. There are two kind of justifications: the direct ones, and the composite ones. A direct justification is specified by the key *direct* which will contain a text justifying the value of the property. An obvious direct justification is specified by an empty string. A composite justification will contain an array of uids of other properties, which altogether are sufficient to justify the value of the current property. A typical composite justification is the justification of an arrow obtained by transitivity of two other arrows. Either *direct*, or *composite* must be equal to null. Moreover, *weight* equals 1 if and only if the justification is direct.
 
@@ -126,14 +123,23 @@ The *meta* key in the root contains meta information, such as the coloring funct
 	 	"tags" : [ ... ],
 		"edgeKinds" : [ ... ],
 		"colorings" : [ ... ],
+		"patches" : { ... }, // optional
+		"about" : {
+			"version" : 1, // optional
+			"description" : "" // optional
+		},
 		"graphviz" = {
-	        	"rankdir" = "TB" // optional. TB, BT, LR, RL
+	        	"rankdir" : "TB" // optional. TB, BT, LR, RL
 		}
 	 }
 
 The *tags*, *edgeKinds* and *coloring* keys contain respectively a list of tags, edge kinds, and of colorings (described below).
 
+The *about* key is optional, and contains a dictionnary of informations about the graph. In particular, *description* contains a brief description (with possible TeX) of the database. It could basically contain some information about the zoo keeper, his email, a link to the source database, ... The *version* key should contain an integer, and is purely informative, as it is not used currently by the front-end.
+
 The *graphviz* key contains a dictionary of options for graphviz, the rendering engine. The only option supported yet is *rankdir*, which specifies the orientation of the graph (TB for Top-Bottom, BT for Bottom-Top, LR for Left-Right and RL for... guess what).
+
+The *patches* key is optional, and contains a dictionnary of "patches", that is, javascript function bodies which will be used in replacement of the original functions in the front-end. You can find a list of available patches and their descriptions in the file [scripts/tools/patches.js](https://github.com/LudovicPatey/zooviewer/raw/master/scripts/tools/patches.js)
 
 ### Tag
 

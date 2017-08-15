@@ -139,7 +139,7 @@ The *about* key is optional, and contains a dictionnary of informations about th
 
 The *graphviz* key contains a dictionary of options for graphviz, the rendering engine. The only option supported yet is *rankdir*, which specifies the orientation of the graph (TB for Top-Bottom, BT for Bottom-Top, LR for Left-Right and RL for... guess what).
 
-The *patches* key is optional, and contains a dictionnary of "patches", that is, javascript function bodies which will be used in replacement of the original functions in the front-end. You can find a list of available patches and their descriptions in the file [scripts/tools/patches.js](https://github.com/LudovicPatey/zooviewer/raw/master/scripts/tools/patches.js)
+The *patches* key is optional, and contains a dictionnary of "patches". See the patches section below.
 
 ### Tag
 
@@ -216,6 +216,22 @@ The *label* key is the string which will be displayed in the graph of edge kinds
 The *key* key is a short string which is unique among the edge kinds. This is used for the edges relation.
 
 The *edges* key contains a list of other edge kind keys. There is an arrow from an edge kind to another edge kind if having an implication of the first kind implies having an implication of the second kind. The relation between edge kinds in not transitive.
+
+### Patch
+
+There are some places in the front-end were the zookeeper needs to replace the standard formatting functions by some custom functions. A patch is a javascript function specified in the JSON database, and which will replace a function in the front-end. It is part of the dictionary *patches* of the *meta* key. It is of the form
+
+	"patches" : {
+		"patch key" : "function body"
+	}
+
+There are a few patch keys, whose extensive list is available in [scripts/tools/patches.js](https://github.com/LudovicPatey/zooviewer/raw/master/scripts/tools/patches.js). The value is a string of a javascript function body whose free variables are the same as the corresponding function in [scripts/tools/patches.js]. The original function is available at "patch key.original". For example, you can set
+
+	"patches" : {
+		"panel.contextual.property" : "var ret = Patches['panel.contextual.property.original'].call(this, key, property); return 'customized ' + ret;"
+	}
+
+This patch will add the prefix "customized " to every property description in the contextual panel. 
 
 ## Credits
 

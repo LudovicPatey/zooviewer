@@ -4,6 +4,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Zoo Viewer 0.2</title>
         
+        <!-- Zoo Viewer 0.2
+         
+         Developped by Ludovic Patey
+         Source code available at https://github.com/LudovicPatey/zooviewer
+         License : MIT
+         
+        -->
+        
         
         <!-- Graph libraries -->
         <script type="text/javascript" src="libs/svg-pan-zoom.min.js"></script>
@@ -21,16 +29,21 @@
 
         <!-- Zoo viewer -->
         <link rel="stylesheet" type="text/css" media="screen,print" href="styles/default.css" />
-        <script type="text/javascript" src="scripts/tools.js"></script>
-        <script type="text/javascript" src="scripts/window.js"></script>
-        <script type="text/javascript" src="scripts/zoo.js"></script>
-        <script type="text/javascript" src="scripts/graph.js"></script>
-        <script type="text/javascript" src="scripts/proofs.js"></script>
-        <script type="text/javascript" src="scripts/select.js"></script>
-        <script type="text/javascript" src="scripts/contextmenu.js"></script>
-        <script type="text/javascript" src="scripts/export.js"></script>
-        <script type="text/javascript" src="scripts/filter.js"></script>
-        <script type="text/javascript" src="scripts/compare.js"></script>
+        <script type="text/javascript" src="scripts/tools/tools.js"></script>
+        <script type="text/javascript" src="scripts/tools/patches.js"></script>
+        <script type="text/javascript" src="scripts/window/window.js"></script>
+        <script type="text/javascript" src="scripts/window/proofs.js"></script>
+        <script type="text/javascript" src="scripts/window/compare.js"></script>
+        <script type="text/javascript" src="scripts/zoo/zoo.js"></script>
+        <script type="text/javascript" src="scripts/zoo/graph.js"></script>
+        <script type="text/javascript" src="scripts/zoo/export.js"></script>
+        <script type="text/javascript" src="scripts/zoo/select.js"></script>
+        <script type="text/javascript" src="scripts/zoo/contextmenu.js"></script>
+        <script type="text/javascript" src="scripts/panel/panel.js"></script>
+        <script type="text/javascript" src="scripts/panel/diffs.js"></script>
+        <script type="text/javascript" src="scripts/panel/filter.js"></script>
+        <script type="text/javascript" src="scripts/panel/legend.js"></script>
+        <script type="text/javascript" src="scripts/panel/contextual.js"></script>
         
         
         <!-- MathJax -->
@@ -79,7 +92,7 @@
                     <div>
                     <h3><label>Edges</label></h3>
                     <p>Choose the kind of edge</p>
-                    <p id="edge_function"><select onchange="Zoo.changeEdgeKind(this.value)"></select></p>
+                    <p id="edge_function"><select onchange="Legend.changeEdgeKind(this.value)"></select></p>
                     <ul>
                         <li><input type="checkbox" checked="checked" disabled="disabled" /><div class="arrow impl">&nbsp;</div> Non-strict implication</li>
                         <li><input type="checkbox" checked="checked" disabled="disabled" /><div class="arrow strictimpl">&nbsp;</div> Strict implication</li>
@@ -91,7 +104,7 @@
                     <div>
                     <h3><label>Nodes</label></h3>
                     <p>Choose the node coloring function</p>
-                    <p id="coloring_function"><select onchange="Zoo.changeColoring(this.value)"></select></p>
+                    <p id="coloring_function"><select onchange="Legend.changeColoring(this.value)"></select></p>
                     <ul>
                     </ul>
                     </div>
@@ -132,9 +145,7 @@
             
             <fieldset id="contextual">
                 <legend>Contextual</legend>
-                <div>
-                    <p>Select nodes to see some context.</p>
-                </div>
+                <div></div>
             </fieldset>
             
         </div>

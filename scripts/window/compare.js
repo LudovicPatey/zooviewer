@@ -23,7 +23,7 @@ var Compare = {
             this.nodes[node.key] = node;
         }
         
-        Zoo.getNodesSize(this.nodes, function() {
+        Tools.getNodesSize(this.nodes, function() {
              Compare.render();
         });
     },

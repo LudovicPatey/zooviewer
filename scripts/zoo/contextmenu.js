@@ -88,7 +88,7 @@ var Contextmenu = {
                 },
                 {
                     title: "local modifications",
-                    action: function() { Zoo.clearLocalModifications() },
+                    action: function() { Diffs.clear() },
                     disabled: !$('#zoo .local_modifications + *').is('ul')
                 }
                                          
@@ -222,13 +222,13 @@ var Contextmenu = {
                  add.push({
                           title : "implication from " + from.key + " to " + to.key,
                           action: function() {
-                          Zoo.addEdge(Zoo.meta.selectedEdgeKind, "implications", from, to);
+                            Diffs.addEdge(Zoo.meta.selectedEdgeKind, "implications", from, to);
                           }
                           });
                  add.push({
                           title : "separation from " + from.key + " to " + to.key,
                           action: function() {
-                          Zoo.addEdge(Zoo.meta.selectedEdgeKind, "separations", from, to);
+                            Diffs.addEdge(Zoo.meta.selectedEdgeKind, "separations", from, to);
                           }
                           });
                  })(from, to);

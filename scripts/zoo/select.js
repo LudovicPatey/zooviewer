@@ -18,7 +18,7 @@ var Select = {
         "coloring" : null
     },
     
-    init: function(options) {
+    create: function(options) {
         if(!options.keepSelection) {
             this.selectedNodes = {};
         }
@@ -38,8 +38,7 @@ var Select = {
         }
         this.coloring.coloring = this.colorNode;
         this.options = $.extend({
-            select: function() {},
-            unselect: function(){}
+            change: function() {}
         }, options);
         this.updateColoringFunction();
         
@@ -47,19 +46,19 @@ var Select = {
     
     unselectAll: function() {
         this.selectedNodes = {};
-        Select.options.unselect.call(this);
+        //Select.options.unselect.call(this);
         Select.updateColoringFunction();
     },
     
     unselect: function(data) {
         delete this.selectedNodes[data.key];
-        this.options.unselect.call(this);
+        //this.options.unselect.call(this);
         this.updateColoringFunction();
     },
     
     select: function(data) {
         this.selectedNodes[data.key] = data;
-        this.options.select.call(this, data);
+        //this.options.select.call(this, data);
         this.updateColoringFunction();
     },
     
@@ -164,7 +163,7 @@ var Select = {
         }
         
         // Save selection list to URL
-        var urlData = Zoo.getUrlData();
+        var urlData = Tools.getUrlData();
         var sels = [];
         for(var key in this.selectedNodes) {
             sels.push(key);
@@ -173,8 +172,9 @@ var Select = {
             keepSelection : true,
             selection : sels
         };
-        Zoo.setUrlData(urlData);
+        Tools.setUrlData(urlData);
         
+        this.options.change.call(this);
         Graph.colorNodes();
     },
     

@@ -12,7 +12,7 @@ var Window = {
     },
     
     show : function() {
-        Zoo.disablePanel();
+        Panel.disable();
         $('#window').show();
         $('#block').click(Window.hide);
     },
@@ -20,7 +20,7 @@ var Window = {
     hide: function() {
         $('#window').hide();
         $('#block').unbind('click', Window.hide);
-        Zoo.enablePanel();
+        Panel.enable();
     },
     
 };

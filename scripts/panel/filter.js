@@ -20,7 +20,7 @@ var Filter = {
         
     },
     
-    initDatabase: function() {
+    create: function() {
         
         var tags = [];
         for(var i=0; i<Zoo.meta.tags.length; i++) {
@@ -49,7 +49,7 @@ var Filter = {
         
         this.initTags();
         
-        var urlData = Zoo.getUrlData();
+        var urlData = Tools.getUrlData();
         if(urlData.filters) {
             this.filters = urlData.filters;
             this.filters.comparableList = Zoo.keysToNodes(this.filters.comparableList);
@@ -132,18 +132,14 @@ var Filter = {
     // Update Filter.filters from the panel
     // And refresh the graph
     applyFilter: function() {
-        Zoo.disablePanel();
+        Panel.disable();
         this.panelToData();
         
-        var urlData = Zoo.getUrlData();
+        var urlData = Tools.getUrlData();
         urlData.filters = $.extend({}, this.filters);
         urlData.filters.comparableList = Zoo.nodesToKeys(urlData.filters.comparableList);
         urlData.filters.exclusionList = Zoo.nodesToKeys(urlData.filters.exclusionList);
-        Zoo.setUrlData(urlData);
-        
-        /*if(!keepSelection) {
-            Select.unselectAll();
-        }*/
+        Tools.setUrlData(urlData);
         
         
         Zoo.newGraph({
@@ -171,7 +167,7 @@ var Filter = {
             li.data('node', list[i]);
             content.append(li);
         }
-        Zoo.getNodesSize(list, function() {
+        Tools.getNodesSize(list, function() {
             for(var i=0; i<list.length; i++) {
                 var key = Tools.escapeChars(list[i].key);
                 var li = content.find('[key="' + key + '"].toAdd');

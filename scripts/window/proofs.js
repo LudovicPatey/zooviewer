@@ -4,7 +4,7 @@ var Proofs = {
     props: null,
     
     // Init once per zoo
-    init: function() {
+    create: function() {
         this.props = null;
     },
     
@@ -32,7 +32,7 @@ var Proofs = {
 
         var ul = $('<ul></ul>');
         for(var key in node.properties) {
-            this.buildProof(ul, node.properties[key]);
+            this.buildProof(ul, key, node.properties[key]);
         }
         Window.open({
                     title : "Properties of the node",
@@ -47,7 +47,7 @@ var Proofs = {
                 if(i == j) continue;
                 var edge = sel[i].edges[sel[j].key];
                 for(var k in edge.properties) {
-                    this.buildProof(ul, edge.properties[k]);
+                    this.buildProof(ul, k, edge.properties[k]);
                 }
             }
         }
@@ -57,11 +57,12 @@ var Proofs = {
         });
     },
     
-    buildProof(ul, prop) {
+    buildProof(ul, key, prop) {
         if(prop.value === null) return;
         
         var just = prop.justification;
-        var li = $("<li><span class=\"description\">" + prop.description + "</span></li>");
+        var func = Patches["panel.contextual.property"];
+        var li = $("<li><span class=\"description\">" + func.call(this, key, prop) + "</span></li>");
         var justUl = $("<ul></ul>");
         if(just.direct === null || just.direct)
             li.append(justUl);
@@ -71,7 +72,7 @@ var Proofs = {
         }
         else {
             for(var i=0; i<just.composite.length; i++) {
-                this.buildProof(justUl, this.getPropById(just.composite[i]));
+                this.buildProof(justUl, just.composite[i], this.getPropById(just.composite[i]));
             }
         }
     }

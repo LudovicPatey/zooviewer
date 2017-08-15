@@ -46,20 +46,14 @@ var Graph = {
         this.svgPatterns = {};
         
         // Make the graph clickable
-        Select.init($.extend({
-            select: function() {
-                Graph.updateContext();
-            },
-            unselect: function() {
-                Graph.updateContext();
+        Select.create($.extend({
+            change: function() {
+                Contextual.update();
             }
         }, options.select));
         
-        this.updateContext();
-        Proofs.init();
-        
         // Compute text size and generate once for all the latex node
-        Zoo.getNodesSize(this.nodes, function() {
+        Tools.getNodesSize(this.nodes, function() {
             Graph.render();
             options.finished.call(this);
         });
@@ -213,8 +207,8 @@ var Graph = {
         }
         
         // Add implication diffs
-        for(var i=0; i<Zoo.diffs.implications.length; i++) {
-            var diff = Zoo.diffs.implications[i];
+        for(var i=0; i<Diffs.diffs.implications.length; i++) {
+            var diff = Diffs.diffs.implications[i];
             
             // If this is not this kind of edge, skip
             if(diff.kind != Zoo.meta.selectedEdgeKind) continue;
@@ -230,8 +224,8 @@ var Graph = {
         
         
         // Add non-implication diffs
-        for(var i=0; i<Zoo.diffs.separations.length; i++) {
-            var diff = Zoo.diffs.separations[i];
+        for(var i=0; i<Diffs.diffs.separations.length; i++) {
+            var diff = Diffs.diffs.separations[i];
             
             // If this is not this kind of edge, skip
             if(diff.kind != Zoo.meta.selectedEdgeKind) continue;
@@ -514,7 +508,6 @@ var Graph = {
                                   
             var node = $(this).data('data');
 
-
             // Graphviz used ids as labels
             // Replace id with the Latex label
             $('text', this).html(node.texLabel);
@@ -522,54 +515,5 @@ var Graph = {
 
         });
         
-    },
-    
-    updateContext: function() {
-        var sel = Select.getSelectionList();
-        var div = $('#contextual div');
-        if(sel.length == 0) {
-            div.html('<p>Select nodes to see some context</p>');
-        }
-        else if(sel.length == 1) {
-            var node = sel[0];
-            
-            div.html('<h3>Selected node</h3>');
-            div.append('<p class="label"></p>');
-            div.find('.label').append($('.MathJax_SVG > *', node.div).clone());
-            if(node.definition) {
-                div.append('<h3>Definition</h3><p class="definition">' + node.definition + '</p>');
-            }
-            var dl = $('<dl></dl>');
-            for(var prop in node.properties) {
-                var value = node.properties[prop].value;
-                switch(value) {
-                    case true: value = 'true'; break;
-                    case false: value = 'false'; break;
-                    case null : value = 'unknown'; break;
-                }
-                dl.append('<dt>' + prop + '</dt><dd>' + value + '</dd>');
-            }
-            div.append('<h3>Properties</h3>');
-            if(dl.children().length > 0) {
-                div.append(dl);
-                div.append('<p class="proofs"><input type="button" value="Proofs" /></p>');
-            }
-            else {
-                div.append('<p>There are no properties.</p>');
-            }
-            $('.proofs input', div).click(function() {
-                  Proofs.showProperties(node);
-            });
-            MathJax.Hub.Queue(["Typeset",MathJax.Hub, div.get(0)]);
-        }
-        else {
-            div.html('<p>You selected ' + sel.length + ' nodes. Click on "Proofs" to see the justification of the arrows.</p>');
-            div.append('<p class="proofs"><input type="button" value="Proofs" /></p>');
-            $('.proofs input', div).click(function() {
-              Proofs.showArrows(sel);
-              });
-        }
     }
-
-    
 };

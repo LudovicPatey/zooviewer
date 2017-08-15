@@ -68,11 +68,19 @@ a:hover {
     padding-top: 0px;
 }
 
-/*#panel fieldset legend {
-    margin-left: 5px;
-    padding-left: 5px;
-    padding-right: 5px;
-}*/
+#panel a {
+    color: #0976bd;
+}
+
+#panel .dt {
+    display: block;
+    float: left;
+    clear: both;
+}
+
+#panel .dd {
+    display: block;
+}
 
 #panel fieldset {
     border: 0px;
@@ -257,24 +265,14 @@ a:hover {
     clear: both;
 }
 
-/*#contextual .label {
-    font-size: 12px;
-    padding: 5px 0px 5px 10px;
-    background-color: #EEEEEE;
-    border-bottom: 1px solid #CCCCCC;
-    font-weight: normal;
-}
 
-#contextual .label + * {
-    padding-top: 10px;
-}
- */
-
-#contextual dt {
-    width: 150px;
-    float: left;
-    clear: both;
+#contextual li {
+    list-style: none;
     padding: 0px 5px 2px 10px;
+}
+
+#contextual .dt {
+    width: 150px;
 }
 
 

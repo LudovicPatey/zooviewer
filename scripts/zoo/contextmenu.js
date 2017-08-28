@@ -37,7 +37,7 @@ var Contextmenu = {
                    title: coloring.label,
                    uiIcon : selected ? 'ui-icon ui-menu-icon ui-icon-check' : null,
                    action: function() {
-                        Zoo.changeColoring(i)
+                        Legend.changeColoring(i)
                    }
                 });
             })(i);

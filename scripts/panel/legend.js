@@ -55,6 +55,7 @@ var Legend = {
     updateColoringLegend: function() {
         var ul = $('#coloring_function + ul');
         var coloring = Zoo.meta.colorings[Zoo.meta.selectedColoring];
+        $('#coloring_function select').val(Zoo.meta.selectedColoring);
         ul.empty();
         for(var i=0; i<coloring.colors.length; i++) {
             var background = coloring.colors[i].color;

@@ -37,12 +37,10 @@ var Panel = {
     createZooPanel : function() {
         var about = Zoo.meta.about || {};
         var div = $('#zoo > div');
+        div.find('.about').remove();
         if(about.description) {
             div.append('<h3 class="about">About</h3>');
             div.append('<p class="about">' + about.description + '</p>');
-        }
-        else {
-            div.find('.about').remove();
         }
         MathJax.Hub.Queue(["Typeset",MathJax.Hub, div.find('p').get(0)]);
     },
